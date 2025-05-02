@@ -1,0 +1,23 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/images/chat-user-placeholder.jpg" alt="Avatar" class="avatar" />
+    <button class="login-btn">Log in</button>
+  </div>
+
+  <input
+    type="text"
+    class="search-input"
+    placeholder="Search or start new chat"
+  />
+
+  <div class="chat-list">
+    <div class="chat-item" *ngFor="let chat of chats">
+      <img src={{chat.imagePath}} class="chat-avatar" alt="User" />
+      <div class="chat-info">
+        <div class="chat-name">{{ chat.name }}</div>
+        <div class="chat-last-message">{{ chat.lastMessage }}</div>
+      </div>
+      <div class="chat-date">{{ chat.date }}</div>
+    </div>
+  </div>
+</aside>
