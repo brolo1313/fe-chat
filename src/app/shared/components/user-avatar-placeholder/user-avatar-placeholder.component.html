@@ -1,6 +1,6 @@
 <div>
   <img
-    src={{source}}
+    [src]="source ? source : defaultAvatarPath"
     alt="Avatar"
     class="avatar"
   />

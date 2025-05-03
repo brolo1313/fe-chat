@@ -8,5 +8,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './user-avatar-placeholder.component.scss'
 })
 export class UserAvatarPlaceholderComponent {
-  @Input() source: string = 'assets/images/chat-user-placeholder.jpg';
+  @Input() source!: string;
+
+  public defaultAvatarPath = 'https://www.w3schools.com/howto/img_avatar.png';
 }

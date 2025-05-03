@@ -1,21 +1,23 @@
 <section class="chat-window d-flex flex-column">
   <header class="chat-header d-flex just items-center">
     <app-user-avatar-placeholder
-      [source]="selectedChat.imagePath"
+      [source]="selectedChat?.imagePath"
     ></app-user-avatar-placeholder>
 
-    <div class="chat-title">{{ selectedChat.name }}</div>
+    <div class="chat-title">{{ selectedChat?.name }}</div>
   </header>
+
+  @if(selectedChat) {
   <div class="messages d-flex flex-column">
     <div
-      *ngFor="let message of selectedChat.messages"
-      [ngClass]="{ 'message-row': true, own: message.isOwn }"
+      *ngFor="let message of selectedChat?.messages"
+      [ngClass]="{ 'message-row': true, own: message?.isOwn }"
     >
       <div class="message-bubble">
-        <span> {{ message.content }}</span>
+        <span> {{ message?.content }}</span>
       </div>
       <div class="message-time">
-        {{ message.time }}
+        {{ message?.time }}
       </div>
     </div>
   </div>
@@ -32,9 +34,13 @@
       [disabled]="messageControl.invalid"
       class="send-btn cursor-pointer"
       (click)="sendMessage()"
-    
     >
       <span>&#10148;</span>
     </button>
   </footer>
+  } @else {
+  <div class="empty-data d-flex justify-center">
+    Select a chat to start messaging
+  </div>
+  }
 </section>
