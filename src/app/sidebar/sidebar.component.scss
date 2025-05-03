@@ -42,6 +42,24 @@ hr {
   margin: 0;
 }
 
+.new-chat-wrapper {
+  margin: 10 1px;
+
+  .new-chat-button {
+    border-radius: 4px;
+    background-color: $primary;
+
+    height: 36px;
+    width: 100%;
+
+    span {
+      color: $white;
+      font-size: 25px;
+      font-weight: bold;
+    }
+  }
+}
+
 .chat-list-title {
   color: $primary;
   margin-bottom: 2rem;
@@ -54,18 +72,29 @@ hr {
   background-color: $light;
 }
 
-.text-gray {
-  color: $light-gray;
+//custom context menu
+.custom-menu {
+  position: absolute;
+  background: $white;
+  border: 1px solid #ccc;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  z-index: 1000;
+  width: 150px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: none;
 }
 
-.fw-bold {
-  font-weight: bold;
+.custom-menu.visible {
+  display: block;
 }
 
-.fs-085 {
-  font-size: 0.85rem;
+.custom-menu li {
+  padding: 10px;
+  cursor: pointer;
 }
 
-.fs-075 {
-  font-size: 0.75rem;
+.custom-menu li:hover {
+  background-color: #eee;
 }

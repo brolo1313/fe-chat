@@ -16,6 +16,15 @@
 
   <hr class="full-width" />
 
+  <div class="new-chat-wrapper p-1">
+    <button
+      (click)="showCreateModal()"
+      class="new-chat-button d-flex justify-center items-center"
+    >
+      <span>+</span>
+    </button>
+  </div>
+
   <div class="chat-list flex-grow overflow-auto">
     <div class="chat-list-title">
       <h3>Chats</h3>
@@ -25,27 +34,42 @@
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
         (click)="onSelectChat(chat)"
+        (contextmenu)="onRightClick($event, chat)"
       >
         <app-user-avatar-placeholder
           [source]="chat.imagePath"
         ></app-user-avatar-placeholder>
         <div class="chat-info flex-grow">
-          <div class="chat-name fw-bold">{{ chat.name }}</div>
+          <div class="chat-name fw-bold">{{ chat.firstName }} {{ chat.lastName }}</div>
           <div class="chat-last-message text-gray fs-085">
-            {{ chat.lastMessage.message }}
+            {{ chat?.lastMessage?.message }}
           </div>
         </div>
         <div class="chat-date text-gray fs-075">
-          {{ chat.lastMessage.date | date : "MMM, d, y" }}
+          {{ chat?.lastMessage?.date | date : "MMM, d, y" }}
         </div>
       </div>
     </div>
-    }
-
-    @else {
-      <div class="empty-data d-flex justify-center ">
-        No chats found yet
-      </div>
+    } @else {
+    <div class="empty-data d-flex justify-center">No chats found yet</div>
     }
   </div>
 </aside>
+
+<app-chat-modal
+  *ngIf="modalVisible"
+  [mode]="modalMode"
+  [chat]="selectedChat"
+  (confirm)="handleConfirm($event)"
+  (cancel)="modalVisible = false"
+></app-chat-modal>
+
+<ul
+  class="custom-menu"
+  [class.visible]="contextMenuVisible"
+  [style.left.px]="contextMenuPosition.x"
+  [style.top.px]="contextMenuPosition.y"
+>
+  <li (click)="editChat(selectedChat)">Редагувати</li>
+  <li (click)="deleteChat(selectedChat)">Видалити</li>
+</ul>

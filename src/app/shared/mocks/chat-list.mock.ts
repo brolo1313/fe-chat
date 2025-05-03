@@ -1,7 +1,30 @@
-export const mockChatsList = [
+export interface ChatMessage {
+    content: string;
+    isOwn: boolean;
+    time: string;
+    date: string;
+}
+
+export interface LastMessage {
+    message: string;
+    time: string;
+    date: string;
+}
+
+export interface Chat {
+    id: number;
+    firstName: string;
+    lastName: string;
+    lastMessage?: LastMessage;
+    imagePath?: string;
+    messages?: ChatMessage[];
+}
+
+export const mockChatsList: Chat[] = [
     {
         id: 1,
-        name: 'Joan',
+        firstName: 'Joan',
+        lastName: 'Doe',
         lastMessage: {
             message: 'I am fine, thank you!',
             time: '10:00 AM',
@@ -18,7 +41,8 @@ export const mockChatsList = [
     },
     {
         id: 2,
-        name: 'Freddy',
+        firstName: 'Freddy',
+        lastName: 'Kruger',
         lastMessage: {
             message: 'Not good yet',
             time: '10:00 AM',
@@ -34,7 +58,8 @@ export const mockChatsList = [
     },
     {
         id: 3,
-        name: 'Pit',
+        firstName: 'Pit',
+        lastName: 'Bully',
         lastMessage: {
             message: 'Fine, a lot good news',
             time: '10:00 AM',

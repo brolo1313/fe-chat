@@ -1,0 +1,47 @@
+<div class="backdrop" (click)="onCancel()"></div>
+
+<div class="modal">
+  <h2 *ngIf="mode === 'create'">New Chat</h2>
+  <h2 *ngIf="mode === 'edit'">Edit Chat</h2>
+
+  <div *ngIf="mode === 'create'" class="form">
+    <label>
+      First Name:
+      <input type="text" [formControl]="firstName" />
+    </label>
+    <label>
+      Last Name:
+      <input type="text" [formControl]="lastName" />
+    </label>
+  </div>
+
+  <div *ngIf="mode === 'edit'" class="form">
+    <label>
+      First Name:
+      <input type="text" [formControl]="firstName" />
+    </label>
+    <label>
+      Last Name:
+      <input type="text" [formControl]="lastName" />
+    </label>
+  </div>
+
+  <p *ngIf="mode === 'delete'">
+    Are you sure you want to delete chat <strong>{{ chat?.firstName }} {{ chat?.lastName }}</strong
+    >?
+  </p>
+
+  <div class="actions d-flex">
+    <button class="full-width" (click)="onCancel()">Cancel</button>
+    <button
+      class="full-width"
+      [disabled]="
+        (mode === 'create' || mode === 'edit') &&
+        (!firstName.valid || !lastName.valid)
+      "
+      (click)="onConfirm()"
+    >
+      {{ mode === "create" ? "Create" : mode === "edit" ? "Save" : "Delete" }}
+    </button>
+  </div>
+</div>
