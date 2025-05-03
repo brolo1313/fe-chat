@@ -1,0 +1,121 @@
+/* =============================
+   Width / Height Utilities
+============================= */
+.full-width  { width: 100%; }
+.full-height { height: 100%; }
+.w-auto      { width: auto; }
+.h-auto      { height: auto; }
+.max-w-full  { max-width: 100%; }
+.max-h-full  { max-height: 100%; }
+
+/* =============================
+   Display / Position Utilities
+============================= */
+.d-block     { display: block; }
+.d-inline    { display: inline; }
+.d-inline-block { display: inline-block; }
+.d-flex      { display: flex; }
+.d-grid      { display: grid; }
+
+.pos-relative { position: relative; }
+.pos-absolute { position: absolute; }
+.pos-fixed    { position: fixed; }
+.pos-sticky   { position: sticky; }
+
+/* =============================
+   Flexbox Utilities
+============================= */
+.justify-start    { justify-content: flex-start; }
+.justify-center   { justify-content: center; }
+.justify-end      { justify-content: flex-end; }
+.justify-between  { justify-content: space-between; }
+
+.items-start      { align-items: flex-start; }
+.items-center     { align-items: center; }
+.items-end        { align-items: flex-end; }
+
+.flex-column      { flex-direction: column; }
+.flex-row         { flex-direction: row; }
+.flex-wrap        { flex-wrap: wrap; }
+.flex-grow        { flex-grow: 1; }
+
+/* =============================
+   Margin / Padding Shortcuts
+============================= */
+.m-0  { margin: 0 !important; }
+.mt-0 { margin-top: 0 !important; }
+.mb-0 { margin-bottom: 0 !important; }
+.ml-0 { margin-left: 0 !important; }
+.mr-0 { margin-right: 0 !important; }
+
+.p-0  { padding: 0 !important; }
+.pt-0 { padding-top: 0 !important; }
+.pb-0 { padding-bottom: 0 !important; }
+.pl-0 { padding-left: 0 !important; }
+.pr-0 { padding-right: 0 !important; }
+
+/* Часто використовувані відступи */
+.mt-auto { margin-top: auto; }
+.mb-auto { margin-bottom: auto; }
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =============================
+   Text Utilities
+============================= */
+.text-left   { text-align: left; }
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.text-uppercase { text-transform: uppercase; }
+.text-lowercase { text-transform: lowercase; }
+.text-capitalize { text-transform: capitalize; }
+
+/* =============================
+   Overflow & Visibility
+============================= */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+.overflow-scroll { overflow: scroll; }
+
+.hidden  { display: none !important; }
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+
+/* =============================
+   Cursor
+============================= */
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+
+/* =============================
+   Borders
+============================= */
+.border         { border: 1px solid #ccc; }
+.border-top     { border-top: 1px solid #ccc; }
+.border-bottom  { border-bottom: 1px solid #ccc; }
+.border-none    { border: none; }
+.rounded        { border-radius: 4px; }
+.rounded-full   { border-radius: 9999px; }
+
+/* =============================
+   Z-index
+============================= */
+.z-0  { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-50 { z-index: 50; }
+.z-100 { z-index: 100; }
+
+
+
+.mb-1 { margin-bottom: 1rem; }
+.p-1 { padding: 1rem; }
+.flex-grow { flex-grow: 1; }
+.text-gray { color: #999; }
+.fw-bold { font-weight: bold; }
+.fs-085 { font-size: 0.85rem; }
+.fs-075 { font-size: 0.75rem; }
+.gap-05 { gap: 0.5rem; }
+.p-05 { padding: 0.5rem 0; }
+.border-bottom { border-bottom: 1px solid #eee; }

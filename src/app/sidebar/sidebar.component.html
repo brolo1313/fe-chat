@@ -1,23 +1,42 @@
-<aside class="sidebar">
-  <div class="sidebar-header">
-    <img src="assets/images/chat-user-placeholder.jpg" alt="Avatar" class="avatar" />
-    <button class="login-btn">Log in</button>
+<aside class="sidebar d-flex flex-column">
+  <div class="header-wrapper d-flex flex-column">
+    <div class="sidebar-header d-flex justify-between items-center mb-1">
+      <img
+        src="assets/images/chat-user-placeholder.jpg"
+        alt="Avatar"
+        class="avatar"
+      />
+      <button class="login-btn">Log in</button>
+    </div>
+
+    <input
+      type="text"
+      class="search-input mb-1"
+      placeholder="Search or start new chat"
+    />
   </div>
 
-  <input
-    type="text"
-    class="search-input"
-    placeholder="Search or start new chat"
-  />
+  <hr class="full-width" />
 
-  <div class="chat-list">
-    <div class="chat-item" *ngFor="let chat of chats">
-      <img src={{chat.imagePath}} class="chat-avatar" alt="User" />
-      <div class="chat-info">
-        <div class="chat-name">{{ chat.name }}</div>
-        <div class="chat-last-message">{{ chat.lastMessage }}</div>
+  <div class="chat-list flex-grow overflow-auto">
+    <div class="chat-list-title">
+      <h3>Chats</h3>
+    </div>
+    <div *ngFor="let chat of chats">
+      <div
+        class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
+      >
+        <img [src]="chat.imagePath" class="chat-avatar" alt="User" />
+        <div class="chat-info flex-grow">
+          <div class="chat-name fw-bold">{{ chat.name }}</div>
+          <div class="chat-last-message text-gray fs-085">
+            {{ chat.lastMessage }}
+          </div>
+        </div>
+        <div class="chat-date text-gray fs-075">
+          {{ chat.date | date : "MMM, d, y" }}
+        </div>
       </div>
-      <div class="chat-date">{{ chat.date }}</div>
     </div>
   </div>
 </aside>
