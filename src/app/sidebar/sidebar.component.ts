@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, UserAvatarPlaceholderComponent],
+  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
-  
+export class SidebarComponent implements OnInit, OnDestroy {
+
+  private unsubscribe$ = new Subject();
+
+  public searchControl = new FormControl('')
+
+  public filteredChats: any[] = [];
+
   public chats = [
     {
       id: 1,
@@ -36,4 +44,26 @@ export class SidebarComponent {
       imagePath: 'assets/images/chat-user-placeholder.jpg'
     }
   ]
+
+  public trackByFn = (index: number, item: any) => item?.id;
+
+  ngOnInit() {
+    this.filteredChats = this.chats
+  }
+
+  public onChangeSearchControl() {
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this.unsubscribe$)
+    ).subscribe((searchValue) => {
+      this.filteredChats = this.chats.filter(value => value.name.toLowerCase().includes(searchValue!.toLowerCase()))
+    }
+    )
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next(true);
+    this.unsubscribe$.complete();
+  }
 }

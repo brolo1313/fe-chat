@@ -21,8 +21,19 @@
   </div>
 
   <footer class="message-input-wrapper d-flex p-1">
-    <input type="text" class="message-input" placeholder="Type your message" />
-    <button class="send-btn cursor-pointer" (click)="sendMessage()">
+    <input
+      [formControl]="messageControl"
+      type="text"
+      class="message-input"
+      placeholder="Type your message"
+      (keyup.enter)="onKeyDownEvent($event)"
+    />
+    <button
+      [disabled]="messageControl.invalid"
+      class="send-btn cursor-pointer"
+      (click)="sendMessage()"
+    
+    >
       <span>&#10148;</span>
     </button>
   </footer>

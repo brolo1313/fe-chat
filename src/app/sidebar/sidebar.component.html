@@ -8,7 +8,9 @@
     <input
       type="text"
       class="search-input mb-1"
+      [formControl]="searchControl"
       placeholder="Search or start new chat"
+      (selectionchange)="onChangeSearchControl()"
     />
   </div>
 
@@ -18,11 +20,14 @@
     <div class="chat-list-title">
       <h3>Chats</h3>
     </div>
-    <div *ngFor="let chat of chats">
+    @if(filteredChats.length){
+    <div *ngFor="let chat of filteredChats; trackBy: trackByFn">
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
       >
-        <app-user-avatar-placeholder [source]="chat.imagePath"></app-user-avatar-placeholder>
+        <app-user-avatar-placeholder
+          [source]="chat.imagePath"
+        ></app-user-avatar-placeholder>
         <div class="chat-info flex-grow">
           <div class="chat-name fw-bold">{{ chat.name }}</div>
           <div class="chat-last-message text-gray fs-085">
@@ -34,5 +39,12 @@
         </div>
       </div>
     </div>
+    }
+
+    @else {
+      <div class="empty-data d-flex justify-center ">
+        No chats found yet
+      </div>
+    }
   </div>
 </aside>
