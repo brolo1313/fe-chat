@@ -1,11 +1,7 @@
 <aside class="sidebar d-flex flex-column">
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
-      <img
-        src="assets/images/chat-user-placeholder.jpg"
-        alt="Avatar"
-        class="avatar"
-      />
+      <app-user-avatar-placeholder></app-user-avatar-placeholder>
       <button class="login-btn">Log in</button>
     </div>
 
@@ -26,7 +22,7 @@
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
       >
-        <img [src]="chat.imagePath" class="chat-avatar" alt="User" />
+        <app-user-avatar-placeholder [source]="chat.imagePath"></app-user-avatar-placeholder>
         <div class="chat-info flex-grow">
           <div class="chat-name fw-bold">{{ chat.name }}</div>
           <div class="chat-last-message text-gray fs-085">

@@ -1,0 +1,97 @@
+@use "../../assets/styles/variables" as *;
+
+.chat-window {
+  flex: 1;
+
+  width: 100%;
+  height: 100vh;
+}
+
+.chat-header {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+
+  background-color: $header-color;
+
+  .chat-title {
+    margin-left: 10px;
+  }
+}
+
+.messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+
+  gap: 0.5rem;
+}
+
+.message-row.own,
+.message-row {
+  width: auto;
+
+  flex-direction: column;
+}
+
+.message-row:not(.own) {
+  margin-right: auto;
+  .message-time {
+    text-align: left;
+  }
+}
+
+.message-row.own {
+  margin-left: auto;
+  .message-time {
+    text-align: right;
+  }
+}
+
+.message-bubble {
+  background-color: $message-conversation-partner;
+  color: $secondary;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  width: auto;
+  max-width: 300px;
+  position: relative;
+}
+
+.message-row.own .message-bubble {
+  background-color: $message-color;
+  color: $light;
+
+  span {
+    overflow-wrap: break-word;
+  }
+}
+
+.message-time {
+  font-size: 0.7rem;
+  text-align: right;
+  margin-top: 0.25rem;
+
+  color: $secondary;
+}
+
+.message-input-wrapper {
+  border-top: 1px solid #ddd;
+  gap: 0.5rem;
+}
+
+.message-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.send-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0 1rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+}
