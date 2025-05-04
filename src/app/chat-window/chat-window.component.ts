@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
 import { ChatApiService } from '../shared/services/chat-api.service';
+import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -14,13 +15,21 @@ import { ChatApiService } from '../shared/services/chat-api.service';
 export class ChatWindowComponent {
   storeSelectedChat = inject(StoreSelectedChatService);
   apiService = inject(ChatApiService);
+  public localStorageService = inject(LocalStorageUserService);
 
+  public accessToken: string | null | undefined = null;
   public messageControl = new FormControl('', [Validators.required])
 
   public selectedChat: any = null;
 
   get messageFC() {
     return this.messageControl.value;
+  }
+
+  constructor() {
+    effect(() => {
+      this.accessToken = this.localStorageService.userSettings$()?.accessToken;
+    });
   }
 
   ngOnInit() {

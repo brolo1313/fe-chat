@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-user-avatar-placeholder',
@@ -8,7 +8,15 @@ import { Component, Input } from '@angular/core';
   styleUrl: './user-avatar-placeholder.component.scss'
 })
 export class UserAvatarPlaceholderComponent {
-  @Input() source!: string;
+  @Input() source!: string | null | undefined;
 
   public defaultAvatarPath = 'https://www.w3schools.com/howto/img_avatar.png';
+  public pathToImage: string | null | undefined = this.defaultAvatarPath;
+
+  ngOnChanges({ source }: SimpleChanges) {
+    if (source.currentValue) {
+      console.log('source', source);
+      this.pathToImage = source.currentValue;
+    }
+  }
 }

@@ -16,15 +16,16 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
   let modifiedRequest: HttpRequest<any>;  // eslint-disable-line @typescript-eslint/no-explicit-any
 
   //we need to remove header of authorization, due correctly work OAuth2
-  if (accessToken) {
-    modifiedRequest = req.clone({
-      setHeaders: {
-        Authorization: accessToken ? `Bearer ${accessToken}` : ''
-      }
-    })
-  } else {
-    modifiedRequest = req.clone();
-  }
+  // if (accessToken) {
+  //   modifiedRequest = req.clone({
+  //     setHeaders: {
+  //       Authorization: accessToken ? `Bearer ${accessToken}` : ''
+  //     }
+  //   })
+  // } else {
+  //   modifiedRequest = req.clone();
+  // }
+  modifiedRequest = req.clone();
   return next(modifiedRequest).pipe(
     catchError((dataError: HttpErrorResponse) => {
       const error = dataError.error;

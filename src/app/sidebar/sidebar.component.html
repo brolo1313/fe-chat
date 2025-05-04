@@ -1,18 +1,22 @@
 <aside class="sidebar d-flex flex-column">
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
-      <app-user-avatar-placeholder></app-user-avatar-placeholder>
+      <app-user-avatar-placeholder
+        [source]="photoUrl"
+      ></app-user-avatar-placeholder>
 
       <div class="login-button">
         <div
           id="google-login-button"
           class="login-button btn btn-primary"
-          (click)="signInWithGoogle()"
-        >Login with Google</div>
+          (click)="signInWithGoogle(!!accessToken)"
+        >
+          {{ accessToken ? "Log out with Google" : "Log in with Google" }}
+        </div>
       </div>
-      <!-- <button class="login-btn">Log in</button> -->
     </div>
 
+    @if (accessToken) {
     <input
       type="text"
       class="search-input mb-1"
@@ -20,10 +24,12 @@
       placeholder="Search or start new chat"
       (selectionchange)="onChangeSearchControl()"
     />
+    }
   </div>
 
   <hr class="full-width" />
 
+  @if (accessToken) {
   <div class="new-chat-wrapper p-1">
     <button
       (click)="showCreateModal()"
@@ -32,12 +38,16 @@
       <span>+</span>
     </button>
   </div>
+  }
 
   <div class="chat-list flex-grow overflow-auto">
     <div class="chat-list-title">
       <h3>Chats</h3>
     </div>
-    @if(filteredChats.length){
+
+    @if (!accessToken || !filteredChats?.length) {
+    <ng-container *ngTemplateOutlet="emptyData"></ng-container>
+    } @else {
     <div *ngFor="let chat of filteredChats; trackBy: trackByFn">
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
@@ -60,11 +70,15 @@
         </div>
       </div>
     </div>
-    } @else {
-    <div class="empty-data d-flex justify-center">No chats found yet</div>
     }
   </div>
 </aside>
+
+<ng-template #emptyData>
+  <div class="empty-data d-flex justify-center">
+    {{ accessToken ? "You have no chats" : "You are not logged in" }}
+  </div>
+</ng-template>
 
 <app-chat-modal
   *ngIf="modalVisible"

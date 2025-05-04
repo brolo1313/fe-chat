@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -7,6 +7,7 @@ import { StoreSelectedChatService } from '../shared/services/store-selected-chat
 import { mockChatsList } from '../shared/mocks/chat-list.mock';
 import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.component';
 import { AuthGoogleService } from '../auth/serice/auth-google.service';
+import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,6 +19,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private storeSelectedChat = inject(StoreSelectedChatService);
   private authService = inject(AuthGoogleService);
+  public localStorageService = inject(LocalStorageUserService);
+
+  public accessToken: string | null | undefined = null;
+  public photoUrl: string | null | undefined = null;
 
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';
@@ -38,13 +43,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.contextMenuVisible = false;
   }
 
+  constructor() {
+    effect(() => {
+      this.accessToken = this.localStorageService.userSettings$()?.accessToken;
+      this.photoUrl = this.localStorageService.userSettings$()?.picture;
+    });
+  }
+
   ngOnInit() {
     this.filteredChats = this.chats
   }
 
-  signInWithGoogle() {
-    console.log('signInWithGoogle');
-    this.authService.login();
+  signInWithGoogle(isAccessToken: boolean) {
+    if (!isAccessToken) {
+      this.authService.login();
+    } else {
+      this.authService.logout();
+    }
   }
 
   public onRightClick(event: MouseEvent, chat: any) {
@@ -118,7 +133,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       takeUntil(this.unsubscribe$)
     ).subscribe((searchValue) => {
-      this.filteredChats = this.chats.filter(value => value.firstName.toLowerCase().includes(searchValue!.toLowerCase()))
+      this.filteredChats = this.chats.filter(value => value.firstName?.toLowerCase().includes(searchValue!?.toLowerCase()))
     }
     )
   }

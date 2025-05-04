@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { AuthDataGoogle, LocalStorageUserService } from "../../shared/services/local-storage-user.service";
 import { environment } from "../../../environments/environment";
 import { AuthConfig, OAuthService } from "angular-oauth2-oidc";
+import { first } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -50,6 +51,7 @@ export class AuthGoogleService {
     logout() {
         this.oAuthService.revokeTokenAndLogout();
         this.oAuthService.logOut();
+        this.localStorageService.clearUserSettings();
     }
 
     getProfile() {
@@ -63,18 +65,18 @@ export class AuthGoogleService {
 
 
     private sendProfileToBackend(user: any) {
-        console.log('user', user);
+        console.log('sendProfileToBackend user', user);
         const payload = {
-            name: user.name,
+            firstName: user.given_name,
+            lastName: user.family_name,
             email: user.email,
             picture: user.picture,
-            sub: user.sub, 
+            googleId: user.sub,
         };
 
         this.http.post<AuthDataGoogle>(`${environment.apiUrl}/auth/google/callback`, payload)
             .subscribe({
                 next: (response: AuthDataGoogle) => {
-                    console.log('sendProfileToBackend response', response);
                     this.localStorageService.setUserSettings(response);
                 },
                 error: (error) => {

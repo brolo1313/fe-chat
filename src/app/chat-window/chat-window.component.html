@@ -4,10 +4,19 @@
       [source]="selectedChat?.imagePath"
     ></app-user-avatar-placeholder>
 
-    <div class="chat-title">{{ selectedChat?.name }}</div>
+    @if(accessToken) {
+    <div class="chat-title">
+      {{
+        selectedChat
+          ? selectedChat?.firstName + " " + selectedChat?.lastName
+          : "Select a chat"
+      }}
+    </div>
+
+    }
   </header>
 
-  @if(selectedChat) {
+  @if(selectedChat || accessToken) {
   <div class="messages d-flex flex-column">
     <div
       *ngFor="let message of selectedChat?.messages"
@@ -22,6 +31,7 @@
     </div>
   </div>
 
+  @if(selectedChat){
   <footer class="message-input-wrapper d-flex p-1">
     <input
       [formControl]="messageControl"
@@ -38,9 +48,9 @@
       <span>&#10148;</span>
     </button>
   </footer>
-  } @else {
+  } } @else {
   <div class="empty-data d-flex justify-center">
-    Select a chat to start messaging
+    {{ accessToken ? "Select a chat" : "Login to start chatting" }}
   </div>
   }
 </section>
