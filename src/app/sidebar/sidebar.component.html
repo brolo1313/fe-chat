@@ -2,21 +2,21 @@
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
       <app-user-avatar-placeholder
-        [source]="photoUrl"
+        [source]="photoUrl()"
       ></app-user-avatar-placeholder>
 
       <div class="login-button">
         <div
           id="google-login-button"
           class="login-button btn btn-primary"
-          (click)="signInWithGoogle(!!accessToken)"
+          (click)="signInWithGoogle(!!accessToken())"
         >
-          {{ accessToken ? "Log out with Google" : "Log in with Google" }}
+          {{ accessToken() ? "Log out with Google" : "Log in with Google" }}
         </div>
       </div>
     </div>
 
-    @if (accessToken) {
+    @if (accessToken()) {
     <input
       type="text"
       class="search-input mb-1"
@@ -29,7 +29,7 @@
 
   <hr class="full-width" />
 
-  @if (accessToken) {
+  @if (accessToken()) {
   <div class="new-chat-wrapper p-1">
     <button
       (click)="showCreateModal()"
@@ -45,7 +45,7 @@
       <h3>Chats</h3>
     </div>
 
-    @if (!accessToken || !filteredChats?.length) {
+    @if (!accessToken() || !filteredChats?.length) {
     <ng-container *ngTemplateOutlet="emptyData"></ng-container>
     } @else {
     <div *ngFor="let chat of filteredChats; trackBy: trackByFn">
@@ -76,7 +76,7 @@
 
 <ng-template #emptyData>
   <div class="empty-data d-flex justify-center">
-    {{ accessToken ? "You have no chats" : "You are not logged in" }}
+    {{ accessToken() ? "You have no chats" : "You are not logged in" }}
   </div>
 </ng-template>
 

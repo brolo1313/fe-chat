@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -21,8 +21,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthGoogleService);
   public localStorageService = inject(LocalStorageUserService);
 
-  public accessToken: string | null | undefined = null;
-  public photoUrl: string | null | undefined = null;
+  readonly accessToken = computed(() => this.localStorageService.userSettings$()?.picture);
+  readonly photoUrl = computed(() => this.localStorageService.userSettings$()?.picture);
 
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';
@@ -41,13 +41,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   @HostListener('document:click')
   hideContextMenu() {
     this.contextMenuVisible = false;
-  }
-
-  constructor() {
-    effect(() => {
-      this.accessToken = this.localStorageService.userSettings$()?.accessToken;
-      this.photoUrl = this.localStorageService.userSettings$()?.picture;
-    });
   }
 
   ngOnInit() {
@@ -132,8 +125,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
       debounceTime(300),
       distinctUntilChanged(),
       takeUntil(this.unsubscribe$)
-    ).subscribe((searchValue) => {
-      this.filteredChats = this.chats.filter(value => value.firstName?.toLowerCase().includes(searchValue!?.toLowerCase()))
+    ).subscribe((searchValue: any) => {
+      this.filteredChats = this.chats.filter(value =>
+        (value.firstName?.toLowerCase().includes(searchValue?.toLowerCase())) ||
+        (value.lastName?.toLowerCase().includes(searchValue?.toLowerCase())) ||
+        (value.firstName && value.lastName && `${value.firstName} ${value.lastName}`.toLowerCase().includes(searchValue?.toLowerCase()))
+      );
     }
     )
   }
