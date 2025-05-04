@@ -98,3 +98,25 @@ hr {
 .custom-menu li:hover {
   background-color: #eee;
 }
+
+
+//login button
+
+#google-login-button {
+  height: 50px;
+  width: 250px;
+  background-size: 250px 50px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  border: 1px solid $secondary;
+  cursor:pointer
+}
+
+.login-button {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  padding: 16px;
+}

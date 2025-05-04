@@ -6,16 +6,18 @@ import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
 import { mockChatsList } from '../shared/mocks/chat-list.mock';
 import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.component';
+import { AuthGoogleService } from '../auth/serice/auth-google.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent],
+  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent,],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit, OnDestroy {
 
-  storeSelectedChat = inject(StoreSelectedChatService);
+  private storeSelectedChat = inject(StoreSelectedChatService);
+  private authService = inject(AuthGoogleService);
 
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';
@@ -38,6 +40,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.filteredChats = this.chats
+  }
+
+  signInWithGoogle() {
+    console.log('signInWithGoogle');
+    this.authService.login();
   }
 
   public onRightClick(event: MouseEvent, chat: any) {
