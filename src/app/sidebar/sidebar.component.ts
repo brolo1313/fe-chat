@@ -146,7 +146,8 @@ export class SidebarComponent implements OnDestroy {
 
   public onSelectChat(chat: any) {
     this.localSelectedChat = chat;
-    this.storeSelectedChat.selectChat(chat.id);
+    this.storeSelectedChat.setSelectChatId(chat.id);
+    this.storeSelectedChat.setSelectedChat(chat);
   }
   public onChangeSearchControl() {
     this.searchControl.valueChanges.pipe(

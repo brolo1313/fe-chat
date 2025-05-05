@@ -22,7 +22,7 @@ export class LocalStorageUserService {
     private userSettingsStorageKey = 'auth';
   
     private _userSettings = signal<AuthDataGoogle | null>(null);
-    public readonly userSettings = this._userSettings.asReadonly(); // ⚠️ без "$", бо це signal
+    public readonly userSettings = this._userSettings.asReadonly();
   
     constructor() {
       this.initFromStorage();

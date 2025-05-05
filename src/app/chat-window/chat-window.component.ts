@@ -5,6 +5,8 @@ import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators 
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
 import { ChatApiService } from '../shared/services/chat-api.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
+import { Socket } from 'socket.io-client';
+import { SocketService } from '../socket/socket.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -13,14 +15,17 @@ import { LocalStorageUserService } from '../shared/services/local-storage-user.s
   styleUrl: './chat-window.component.scss'
 })
 export class ChatWindowComponent {
-  storeSelectedChat = inject(StoreSelectedChatService);
-  apiService = inject(ChatApiService);
-  public localStorageService = inject(LocalStorageUserService);
+  private storeSelectedChat = inject(StoreSelectedChatService);
+  private apiService = inject(ChatApiService);
+  private localStorageService = inject(LocalStorageUserService);
+  private socketService = inject(SocketService);
 
   public accessToken: string | null | undefined = null;
   public messageControl = new FormControl('', [Validators.required])
 
   public selectedChat: any = null;
+
+
 
   get messageFC() {
     return this.messageControl.value;
@@ -29,7 +34,7 @@ export class ChatWindowComponent {
   constructor() {
     effect(() => {
       this.accessToken = this.localStorageService.userSettings()?.accessToken;
-      this.selectedChat = null;
+      this.selectedChat = this.storeSelectedChat.selectedChat();
     });
   }
 
@@ -39,7 +44,7 @@ export class ChatWindowComponent {
       if (id) {
         this.apiService.getMessagesByChatId(id).subscribe((response: any) => {
           console.log('Messages for chat ID', id, ':', response);
-          this.selectedChat = response;
+          this.storeSelectedChat.setSelectedChat(response);
         });
       }
     });
@@ -47,8 +52,13 @@ export class ChatWindowComponent {
 
   sendMessage() {
     const msg = this.messageFC;
+    console.log('this.selectedChat.id', this.selectedChat.id);
+    this.socketService.sendMessage({
+      chatId: this.selectedChat.chatId,
+      text: msg,
+    });
+
     this.messageControl.reset();
-    console.log('Sending message:', msg);
   }
 
   onKeyDownEvent(event: any) {

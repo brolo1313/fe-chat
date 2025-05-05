@@ -17,22 +17,25 @@
   </header>
 
   @if(selectedChat || accessToken) {
-  <div class="messages d-flex flex-column">
+  <div class="message-content full-height overflow-auto">
     <div
       *ngFor="let message of selectedChat?.messages"
-      [ngClass]="{ 'message-row': true, own: message?.isOwn }"
+      [ngClass]="{ 'message-row': true, own: !message?.isBot }"
+      class="p-1"
     >
-      <div class="message-bubble">
-        <span> {{ message?.content }}</span>
-      </div>
-      <div class="message-time">
-        {{ message?.time }}
+      <div class="message-wrapper d-flex flex-column align-items-start">
+        <div class="message-bubble">
+          <span>{{ message?.text }}</span>
+        </div>
+        <div class="message-time">
+          {{ message?.createdAt | date : "medium" }}
+        </div>
       </div>
     </div>
   </div>
 
   @if(selectedChat){
-  <footer class="message-input-wrapper d-flex p-1">
+  <footer class="message-input-wrapper d-flex p-1 mt-auto">
     <input
       [formControl]="messageControl"
       type="text"

@@ -3,6 +3,7 @@ import { Injectable, inject } from "@angular/core";
 import { AuthDataGoogle, LocalStorageUserService } from "../../shared/services/local-storage-user.service";
 import { environment } from "../../../environments/environment";
 import { AuthConfig, OAuthService } from "angular-oauth2-oidc";
+import { SocketService } from "../../socket/socket.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthGoogleService {
     loggedIn!: boolean;
 
     private http = inject(HttpClient);
+    private socketService = inject(SocketService);
     private localStorageService = inject(LocalStorageUserService);
     private oAuthService = inject(OAuthService);
 
@@ -49,6 +51,7 @@ export class AuthGoogleService {
     logout() {
         this.oAuthService.revokeTokenAndLogout();
         this.oAuthService.logOut();
+        this.socketService.disconnect();
         this.localStorageService.clearUserSettings();
     }
 
@@ -76,6 +79,7 @@ export class AuthGoogleService {
             .subscribe({
                 next: (response: AuthDataGoogle) => {
                     this.localStorageService.setUserSettings(response);
+                    this.socketService.connect(response.accessToken);
                 },
                 error: (error) => {
                     console.log('sendProfileToBackend error', error);
