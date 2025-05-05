@@ -28,7 +28,7 @@ export class ChatWindowComponent {
 
   constructor() {
     effect(() => {
-      this.accessToken = this.localStorageService.userSettings$()?.accessToken;
+      this.accessToken = this.localStorageService.userSettings()?.accessToken;
       this.selectedChat = null;
     });
   }

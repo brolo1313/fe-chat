@@ -13,6 +13,6 @@ export class AppComponent {
   title = 'fe-chat';
 
   constructor(private localStorageUserService: LocalStorageUserService) {
-    this.localStorageUserService.getUserSettings();
+    this.localStorageUserService.userSettings();
   }
 }

@@ -1,10 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Router } from "@angular/router";
 import { AuthDataGoogle, LocalStorageUserService } from "../../shared/services/local-storage-user.service";
 import { environment } from "../../../environments/environment";
 import { AuthConfig, OAuthService } from "angular-oauth2-oidc";
-import { first } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +32,7 @@ export class AuthGoogleService {
         const authConfig: AuthConfig = {
             issuer: 'https://accounts.google.com',
             strictDiscoveryDocumentValidation: false,
-            clientId: '64531276471-rsgodsdm2879qssn0kvo3pkmtni0q1d5.apps.googleusercontent.com',
+            clientId: environment.googleClientId,
             redirectUri: window.location.origin,
             scope: 'openid profile email',
         };
