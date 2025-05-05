@@ -9,23 +9,41 @@ export class ChatApiService {
 
     http = inject(HttpClient);
 
-
-    public getChatById(id: number) {
-        // const result = this.chatList.find((chat) => chat.id === id);
-        return true;
-    }
-
     public getChatList() {
         return this.http.get(`${environment.apiUrl}/chat/getAll`).pipe(
             (response: any) => {
-                // this.chatList = response;
                 return response;
             }
         );
     }
 
+    public createChat(params: { firstName: string, lastName: string }) {
+        return this.http.post(`${environment.apiUrl}/chat/create`, params).pipe(
+            (response: any) => {
+                return response;
+            }
+        );
+    }
+
+    public updateChat(id: number, params: { firstName: string, lastName: string }) {
+        return this.http.put(`${environment.apiUrl}/chat/update/${id}`, params).pipe(
+            (response: any) => {
+                return response;
+            }
+        );
+    }
+
+
     public deleteChat(id: number) {
         return this.http.delete(`${environment.apiUrl}/chat/delete/${id}`).pipe(
+            (response: any) => {
+                return response;
+            }
+        );
+    }
+
+    public getMessagesByChatId(id: number) {
+        return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`).pipe(
             (response: any) => {
                 return response;
             }

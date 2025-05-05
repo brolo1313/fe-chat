@@ -37,7 +37,10 @@ export class ChatWindowComponent {
     this.storeSelectedChat.selectedChatId$.subscribe((id) => {
       console.log('Selected chat ID:', id);
       if (id) {
-        this.selectedChat = this.apiService.getChatById(id);
+        this.apiService.getMessagesByChatId(id).subscribe((response: any) => {
+          console.log('Messages for chat ID', id, ':', response);
+          this.selectedChat = response;
+        });
       }
     });
   }

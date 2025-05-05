@@ -58,7 +58,6 @@ export class SidebarComponent implements OnDestroy {
 
   private getChatList() {
     this.chatApiService.getChatList().subscribe((response: any) => {
-      console.log('response', response);
       this.filteredChats = response.chats;
     });
   }
@@ -82,15 +81,14 @@ export class SidebarComponent implements OnDestroy {
     this.contextMenuVisible = true;
   }
 
-  public editChat(chat: any) {
+  public editChat() {
     this.contextMenuVisible = false;
     this.showEditModal();
   }
 
-  public deleteChat(chat: any) {
-    console.log('deleteChat', chat);
+  public deleteChat() {
     this.contextMenuVisible = false;
-    this.showDeleteModal(chat.id);
+    this.showDeleteModal();
   }
 
   public showCreateModal() {
@@ -103,7 +101,7 @@ export class SidebarComponent implements OnDestroy {
     this.modalVisible = true;
   }
 
-  public showDeleteModal(id: number) {
+  public showDeleteModal() {
     this.modalMode = 'delete';
     this.modalVisible = true;
   }
@@ -111,19 +109,25 @@ export class SidebarComponent implements OnDestroy {
   handleConfirm(data: any) {
     this.modalVisible = false;
     if (this.modalMode === 'create') {
-      console.log('Create chat with:', data);
-      this.chats.push({
-        id: Math.floor(Math.random() * 500) + 1,
-        firstName: `${data.firstName}`,
-        lastName: `${data.lastName}`,
+      const { firstName, lastName } = data;
+      this.chatApiService.createChat({ firstName, lastName }).subscribe({
+        next: (response: any) => {
+          this.getChatList();
+        },
+        error: (err) => {
+          console.error('Create failed', err);
+        }
       });
     } else if (this.modalMode === 'edit') {
-      const chatIndex = this.chats.findIndex((chat) => chat.id === data.id);
-      if (chatIndex !== -1) {
-        this.chats[chatIndex].firstName = data.firstName;
-        this.chats[chatIndex].lastName = data.lastName;
-      }
-      console.log('Edit chat with:', data);
+      const { firstName, lastName } = data;
+      this.chatApiService.updateChat(this.selectedChat.id, {firstName, lastName}).subscribe({
+        next: (response: any) => {
+          this.getChatList();
+        },
+        error: (err) => {
+          console.error('Update failed', err);
+        }
+      });
     } else if (this.modalMode === 'delete') {
       const id = this.selectedChat?.id;
       if (!id) return;
@@ -141,7 +145,6 @@ export class SidebarComponent implements OnDestroy {
   }
 
   public onSelectChat(chat: any) {
-    console.log('chat', chat);
     this.storeSelectedChat.selectChat(chat.id);
   }
   public onChangeSearchControl() {
