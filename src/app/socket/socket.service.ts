@@ -32,7 +32,7 @@ export class SocketService {
         });
     }
 
-    sendMessage(payload: any) {
+    sendMessage(payload: { chatId: string; text: string }) {
         this.socket.emit('send-message', payload);
     }
 

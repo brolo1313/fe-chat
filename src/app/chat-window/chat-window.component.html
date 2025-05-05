@@ -1,7 +1,7 @@
 <section class="chat-window d-flex flex-column">
   <header class="chat-header d-flex just items-center">
     <app-user-avatar-placeholder
-      [source]="selectedChat?.imagePath"
+      [source]="selectedChat?.imagePath ?? ''"
     ></app-user-avatar-placeholder>
 
     @if(accessToken) {
@@ -9,15 +9,15 @@
       {{
         selectedChat
           ? selectedChat?.firstName + " " + selectedChat?.lastName
-          : "Select a chat"
+          : ""
       }}
     </div>
 
     }
   </header>
 
-  @if(selectedChat || accessToken) {
-  <div class="message-content full-height overflow-auto">
+  @if(selectedChat && accessToken) {
+  <div class="message-content full-height overflow-auto" #chatContainer>
     <div
       *ngFor="let message of selectedChat?.messages"
       [ngClass]="{ 'message-row': true, own: !message?.isBot }"
@@ -41,18 +41,18 @@
       type="text"
       class="message-input"
       placeholder="Type your message"
-      (keyup.enter)="onKeyDownEvent($event)"
+      (keyup.enter)="onKeyDownEvent()"
     />
     <button
       [disabled]="messageControl.invalid"
       class="send-btn cursor-pointer"
-      (click)="sendMessage()"
+      (click)="sendMessage(messageFC!)"
     >
       <span>&#10148;</span>
     </button>
   </footer>
   } } @else {
-  <div class="empty-data d-flex justify-center">
+  <div class="empty-data d-flex justify-center items-center">
     {{ accessToken ? "Select a chat" : "Login to start chatting" }}
   </div>
   }

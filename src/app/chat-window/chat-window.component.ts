@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, ElementRef, inject, ViewChild } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
 import { ChatApiService } from '../shared/services/chat-api.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
-import { Socket } from 'socket.io-client';
 import { SocketService } from '../socket/socket.service';
+import { IChat } from './models/chat.models';
 
 @Component({
   selector: 'app-chat-window',
@@ -20,12 +20,12 @@ export class ChatWindowComponent {
   private localStorageService = inject(LocalStorageUserService);
   private socketService = inject(SocketService);
 
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
   public accessToken: string | null | undefined = null;
   public messageControl = new FormControl('', [Validators.required])
 
-  public selectedChat: any = null;
-
-
+  public selectedChat!: IChat;
 
   get messageFC() {
     return this.messageControl.value;
@@ -40,34 +40,35 @@ export class ChatWindowComponent {
 
   ngOnInit() {
     this.storeSelectedChat.selectedChatId$.subscribe((id) => {
-      console.log('Selected chat ID:', id);
       if (id) {
         this.apiService.getMessagesByChatId(id).subscribe((response: any) => {
-          console.log('Messages for chat ID', id, ':', response);
           this.storeSelectedChat.setSelectedChat(response);
         });
       }
     });
   }
 
-  sendMessage() {
-    const msg = this.messageFC;
-    console.log('this.selectedChat.id', this.selectedChat.id);
-    this.socketService.sendMessage({
-      chatId: this.selectedChat.chatId,
-      text: msg,
-    });
-
-    this.messageControl.reset();
+  sendMessage(msg: string) {
+    if (msg.trim()) {
+      this.socketService.sendMessage({
+        chatId: this.selectedChat?.chatId,
+        text: msg,
+      });
+      this.messageControl.reset();
+      this.scrollToBottom();
+    }
   }
 
-  onKeyDownEvent(event: any) {
-    console.log('event', event);
+  onKeyDownEvent() {
     const msg = this.messageFC;
-    this.messageControl.reset();
-    console.log('Sending message:', msg);
+    this.sendMessage(msg!);
+    this.scrollToBottom();
   }
 
-
-
+  private scrollToBottom(): void {
+    const container = this.chatContainer?.nativeElement;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }
 }

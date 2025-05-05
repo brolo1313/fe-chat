@@ -3,9 +3,13 @@
 @use "./assets/styles/variables" as *;
 
 body {
-    font-family: $font-base;
-  }
+  font-family: $font-base;
+}
 
 button:disabled {
   background-color: $secondary !important;
+}
+
+.empty-data {
+  font-size: 20px;
 }
