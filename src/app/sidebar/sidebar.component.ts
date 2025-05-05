@@ -29,7 +29,7 @@ export class SidebarComponent implements OnDestroy {
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';
 
-  public selectedChat: any = null;
+  public localSelectedChat: any = null;
   public searchControl = new FormControl('')
   public filteredChats: any[] = [];
   public chats = mockChatsList;
@@ -73,7 +73,7 @@ export class SidebarComponent implements OnDestroy {
 
   public onRightClick(event: MouseEvent, chat: any) {
     event.preventDefault();
-    this.selectedChat = chat;
+    this.localSelectedChat = chat;
     this.contextMenuPosition = {
       x: event.clientX,
       y: event.clientY
@@ -120,7 +120,7 @@ export class SidebarComponent implements OnDestroy {
       });
     } else if (this.modalMode === 'edit') {
       const { firstName, lastName } = data;
-      this.chatApiService.updateChat(this.selectedChat.id, {firstName, lastName}).subscribe({
+      this.chatApiService.updateChat(this.localSelectedChat.id, { firstName, lastName }).subscribe({
         next: (response: any) => {
           this.getChatList();
         },
@@ -129,13 +129,13 @@ export class SidebarComponent implements OnDestroy {
         }
       });
     } else if (this.modalMode === 'delete') {
-      const id = this.selectedChat?.id;
+      const id = this.localSelectedChat?.id;
       if (!id) return;
 
       this.chatApiService.deleteChat(id).subscribe({
         next: () => {
           this.getChatList();
-          this.selectedChat = null;
+          this.localSelectedChat = null;
         },
         error: (err) => {
           console.error('Delete failed', err);
@@ -145,6 +145,7 @@ export class SidebarComponent implements OnDestroy {
   }
 
   public onSelectChat(chat: any) {
+    this.localSelectedChat = chat;
     this.storeSelectedChat.selectChat(chat.id);
   }
   public onChangeSearchControl() {

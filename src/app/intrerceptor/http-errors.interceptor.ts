@@ -26,24 +26,24 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
   return next(modifiedRequest).pipe(
     catchError((dataError: HttpErrorResponse) => {
       const error = dataError.error;
-      // console.log('error', error);
+      console.log('error', dataError);
 
-      switch (error.status) {
+      switch (dataError.status) {
         case 401:
-          localStorage.clear();
-          console.log(`Ваша сесія застаріла. Увійдіть знову, код помилки: ${error.status}`);
+          localStorageService.clearUserSettings();
+          console.log(`Ваша сесія застаріла. Увійдіть знову, код помилки: ${dataError.status}`);
           break;
         case 500:
-          console.log('Виникла помилка на сервері', error.status);
+          console.log('Виникла помилка на сервері', dataError.status);
           break;
         case 505:
-          console.log(`На даний момент сервер недоступний, код: ${error.status}`);
+          console.log(`На даний момент сервер недоступний, код: ${dataError.status}`);
           break;
         case 524:
-          console.log('Будь ласка, зверніться до підтримки', error.status);
+          console.log('Будь ласка, зверніться до підтримки', dataError.status);
           break;
         case 404:
-          console.log('Ресурс не знайдено', error.status);
+          console.log('Ресурс не знайдено', dataError.status);
           break;
         default:
           console.log('Неочікувана помилка', error.status);

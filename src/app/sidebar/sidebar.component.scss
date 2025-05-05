@@ -68,6 +68,10 @@ hr {
   padding-top: 1rem;
 }
 
+.chat-item.active-chat {
+  background-color: aliceblue;
+}
+
 .chat-item:hover {
   background-color: $light;
 }

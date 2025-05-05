@@ -52,6 +52,7 @@
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
         (click)="onSelectChat(chat)"
+        [ngClass]="{ 'active-chat': localSelectedChat?.id === chat.id }"
         (contextmenu)="onRightClick($event, chat)"
       >
         <app-user-avatar-placeholder
@@ -59,14 +60,14 @@
         ></app-user-avatar-placeholder>
         <div class="chat-info flex-grow">
           <div class="chat-name fw-bold">
-            {{ chat.firstName }} {{ chat.lastName }}
+            {{ chat?.firstName }} {{ chat?.lastName }}
           </div>
           <div class="chat-last-message text-gray fs-085">
             {{ chat?.lastMessage?.message }}
           </div>
         </div>
         <div class="chat-date text-gray fs-075">
-          {{ chat?.lastMessage?.date | date : "MMM, d, y" }}
+          {{ chat?.lastMessage?.createdAt | date : "MMM, d, y" }}
         </div>
       </div>
     </div>
@@ -83,7 +84,7 @@
 <app-chat-modal
   *ngIf="modalVisible"
   [mode]="modalMode"
-  [chat]="selectedChat"
+  [chat]="localSelectedChat"
   (confirm)="handleConfirm($event)"
   (cancel)="modalVisible = false"
 ></app-chat-modal>
