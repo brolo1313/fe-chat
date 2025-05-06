@@ -11,7 +11,7 @@ export class UserAvatarPlaceholderComponent {
   public defaultAvatarPath = 'https://www.w3schools.com/howto/img_avatar.png';
   public pathToImage = this.defaultAvatarPath;
 
-  @Input() set source(value: string | undefined) {
+  @Input() set source(value: string | undefined | null) {
     this.pathToImage = value?.trim() ? value : this.defaultAvatarPath;
   }
 }

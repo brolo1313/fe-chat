@@ -66,7 +66,6 @@ export class AuthGoogleService {
 
 
     private sendProfileToBackend(user: any) {
-        console.log('sendProfileToBackend user', user);
         const payload = {
             firstName: user.given_name,
             lastName: user.family_name,

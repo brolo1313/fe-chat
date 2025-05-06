@@ -29,7 +29,7 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
   return next(modifiedRequest).pipe(
     catchError((dataError: HttpErrorResponse) => {
       const error = dataError.error;
-      console.log('error', dataError);
+      console.log('error httpErrorsInterceptor', dataError);
 
       const authService = injector.get(AuthGoogleService);
       switch (dataError.status) {

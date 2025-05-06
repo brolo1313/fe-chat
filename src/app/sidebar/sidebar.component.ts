@@ -55,6 +55,7 @@ export class SidebarComponent implements OnDestroy {
   private chatListFetched = false;
 
   constructor() {
+    console.log('photoUrl', this.photoUrl());
     effect(() => {
       const token = this.localStorageService.userSettings()?.accessToken;
       if (token && !this.chatListFetched) {
