@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
@@ -25,7 +25,8 @@ export class ChatWindowComponent {
   public accessToken: string | null | undefined = null;
   public messageControl = new FormControl('', [Validators.required])
 
-  public selectedChat!: IChat;
+  public selectedChat!: IChat | null;
+  public isMessageLoading = signal(true);
 
   get messageFC() {
     return this.messageControl.value;
@@ -40,9 +41,11 @@ export class ChatWindowComponent {
 
   ngOnInit() {
     this.storeSelectedChat.selectedChatId$.subscribe((id) => {
+      this.isMessageLoading.set(true);
       if (id) {
         this.apiService.getMessagesByChatId(id).subscribe((response: any) => {
           this.storeSelectedChat.setSelectedChat(response);
+          this.isMessageLoading.set(false);
         });
       }
     });
@@ -51,7 +54,7 @@ export class ChatWindowComponent {
   sendMessage(msg: string) {
     if (msg.trim()) {
       this.socketService.sendMessage({
-        chatId: this.selectedChat?.chatId,
+        chatId: this.selectedChat?.id!,
         text: msg,
       });
       this.messageControl.reset();

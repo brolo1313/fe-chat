@@ -10,43 +10,23 @@ export class ChatApiService {
     http = inject(HttpClient);
 
     public getChatList() {
-        return this.http.get(`${environment.apiUrl}/chat/getAll`).pipe(
-            (response: any) => {
-                return response;
-            }
-        );
+        return this.http.get(`${environment.apiUrl}/chat/getAll`)
     }
 
     public createChat(params: { firstName: string, lastName: string }) {
-        return this.http.post(`${environment.apiUrl}/chat/create`, params).pipe(
-            (response: any) => {
-                return response;
-            }
-        );
+        return this.http.post(`${environment.apiUrl}/chat/create`, params)
     }
 
-    public updateChat(id: number, params: { firstName: string, lastName: string }) {
-        return this.http.put(`${environment.apiUrl}/chat/update/${id}`, params).pipe(
-            (response: any) => {
-                return response;
-            }
-        );
+    public updateChat(id: number | string, params: { firstName: string, lastName: string }) {
+        return this.http.put(`${environment.apiUrl}/chat/update/${id}`, params)
     }
 
 
-    public deleteChat(id: number) {
-        return this.http.delete(`${environment.apiUrl}/chat/delete/${id}`).pipe(
-            (response: any) => {
-                return response;
-            }
-        );
+    public deleteChat(id: number | string) {
+        return this.http.delete(`${environment.apiUrl}/chat/delete/${id}`)
     }
 
-    public getMessagesByChatId(id: number) {
-        return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`).pipe(
-            (response: any) => {
-                return response;
-            }
-        );
+    public getMessagesByChatId(id: number | string) {
+        return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`)
     }
 }

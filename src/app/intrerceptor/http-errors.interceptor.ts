@@ -1,19 +1,22 @@
 import type { HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { computed, inject } from '@angular/core';
+import { computed, inject, Injector } from '@angular/core';
 import { AuthGoogleService } from '../auth/serice/auth-google.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 
 
 
 export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
-  const localStorageService = inject(LocalStorageUserService);
+  const injector = inject(Injector);
+  const localStorageService = injector.get(LocalStorageUserService);
+
   const userSettings = localStorageService.userSettings();
   const accessToken = userSettings?.accessToken;
 
   const urlWithoutHeader = 'https://accounts.google.com/.well-known/openid-configuration'
 
   let modifiedRequest: HttpRequest<any> = req;
+
 
   if (accessToken && req.url !== urlWithoutHeader) {
     modifiedRequest = req.clone({
@@ -28,9 +31,10 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
       const error = dataError.error;
       console.log('error', dataError);
 
+      const authService = injector.get(AuthGoogleService);
       switch (dataError.status) {
         case 401:
-          localStorageService.clearUserSettings();
+          authService.logout();
           console.log(`Ваша сесія застаріла. Увійдіть знову, код помилки: ${dataError.status}`);
           break;
         case 500:
@@ -47,6 +51,7 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
           break;
         default:
           console.log('Неочікувана помилка', error.status);
+          authService.logout();
           break;
       }
 

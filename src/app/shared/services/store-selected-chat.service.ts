@@ -4,7 +4,7 @@ import { IChat, IMessage } from '../../chat-window/models/chat.models';
 
 @Injectable({ providedIn: 'root' })
 export class StoreSelectedChatService {
-  private selectedChatId = new BehaviorSubject<number | null>(null);
+  private selectedChatId = new BehaviorSubject<number | string | null>(null);
   selectedChatId$ = this.selectedChatId.asObservable();
   
   private _incomingMessage = signal<any>(null);
@@ -12,7 +12,7 @@ export class StoreSelectedChatService {
 
   private _selectedChat = signal<any>(null);
   public selectedChat = this._selectedChat.asReadonly();
-  setSelectChatId(id: number) {
+  setSelectChatId(id: number | string) {
     this.selectedChatId.next(id);
   }
 

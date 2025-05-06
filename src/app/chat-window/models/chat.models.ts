@@ -9,11 +9,13 @@ export interface IMessage {
 }
 
 export interface IChat {
-    chatId: string;
+    id: string;
     owner: string;
     firstName: string;
     lastName: string;
     messages: IMessage[];
     message: string;
     imagePath?: string;
+    lastMessage?: IMessage;
+
 }

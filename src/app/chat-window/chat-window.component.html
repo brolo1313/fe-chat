@@ -7,9 +7,7 @@
     @if(accessToken) {
     <div class="chat-title">
       {{
-        selectedChat
-          ? selectedChat?.firstName + " " + selectedChat?.lastName
-          : ""
+        selectedChat ? selectedChat.firstName + " " + selectedChat.lastName : ""
       }}
     </div>
 
@@ -23,11 +21,14 @@
       [ngClass]="{ 'message-row': true, own: !message?.isBot }"
       class="p-1"
     >
-      <div class="message-wrapper d-flex flex-column align-items-start">
-        <div class="message-bubble">
+      <div
+        class="message-wrapper d-flex flex-column"
+    
+      >
+        <div class="message-bubble" [class.loading]="isMessageLoading()">
           <span>{{ message?.text }}</span>
         </div>
-        <div class="message-time">
+        <div class="message-time" [class.loading]="isMessageLoading()">
           {{ message?.createdAt | date : "medium" }}
         </div>
       </div>
