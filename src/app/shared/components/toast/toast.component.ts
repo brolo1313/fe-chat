@@ -25,7 +25,6 @@ import { ToastService } from '../../services/toast.service';
 export class ToastComponent {
   toastService = inject(ToastService);
 
-
   dismiss(): void {
     this.toastService.dismissToast();
   }

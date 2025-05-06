@@ -1,16 +1,17 @@
 import { environment } from './../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { mockChatsList } from '../mocks/chat-list.mock';
+import { IProfile } from '../../chat-window/models/chat.models';
 
 @Injectable({ providedIn: 'root' })
 export class ChatApiService {
 
     http = inject(HttpClient);
 
-    public getChatList() {
-        return this.http.get(`${environment.apiUrl}/chat/getAll`)
+    public getProfile(): Observable<IProfile> {
+        return this.http.get<IProfile>(`${environment.apiUrl}/chat/getAll`)
     }
 
     public createChat(params: { firstName: string, lastName: string }) {

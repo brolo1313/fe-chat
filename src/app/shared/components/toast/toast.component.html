@@ -4,9 +4,10 @@
     class="toast-class"
     [ngClass]="toastService.toastState()"
   >
-    <div class="toast-message-block">
-      {{ toastService.toastMessage() }}
-    </div>
+    <div
+      class="toast-message-block"
+      [innerHTML]="toastService.toastMessage()"
+    ></div>
 
     <!-- <a class="close-btn" (click)="dismiss()">
       <small> X </small>

@@ -2,13 +2,15 @@ import { inject, Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
+import { IMessage } from '../chat-window/models/chat.models';
+import { TOAST_STATE, ToastService } from '../shared/services/toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
     private socket!: Socket;
 
     private storeSelectedChatService = inject(StoreSelectedChatService);
-
+    private toastService = inject(ToastService);
     connect(token: string | undefined) {
         this.socket = io(environment.socketUrl, {
             auth: { token },
@@ -27,18 +29,34 @@ export class SocketService {
         });
 
         this.onMessage((data) => {
-            const {chatId, message} = data;
-            console.log('onMessage', data);
+            const { id, message } = data;
             this.storeSelectedChatService.updateSelectedChat(message);
         });
+
+        this.onAutoBotMessage((data) => {
+            const { message, fullName } = data
+            this.storeSelectedChatService.findChatByIdAndUpdateMessage(message);
+            if (message.chat === this.storeSelectedChatService.selectedChat()?.id) {
+                this.storeSelectedChatService.updateSelectedChat(message);
+            }
+            this.toastService.showToaster(TOAST_STATE.success,  `New message for <strong>${fullName}</strong>`);
+        })
     }
 
     sendMessage(payload: { chatId: string; text: string }) {
         this.socket.emit('send-message', payload);
     }
 
-    onMessage(callback: (data: any) => void) {
+    onMessage(callback: (data: { id: string; message: IMessage }) => void) {
         this.socket.on('new-message', callback);
+    }
+
+    onAutoBotMessage(callback: (data: { message: IMessage, fullName: string }) => void) {
+        this.socket.on('auto-bot-message', callback);
+    }
+
+    sendAutoBotStatus(status: boolean) {
+        this.socket.emit('auto-bot-status', status);
     }
 
     disconnect() {

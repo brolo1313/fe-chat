@@ -26,6 +26,16 @@ export class StoreSelectedChatService {
     this._selectedChat.set(chat);
   }
 
+  findChatByIdAndUpdateMessage(data: IMessage): IChat | undefined {
+    const chatToUpdate = this._allChats().find(chat => chat.id === data.chat);
+    if (!chatToUpdate) return;
+    chatToUpdate?.messages.push(data);
+    chatToUpdate!.lastMessage = data;
+
+    this._allChats.set(this._allChats().map(chat => chat.id === data.chat ? chatToUpdate : chat));
+    return
+  }
+
   updateSelectedChat(messages: IMessage) {
     const currentChat = this._selectedChat();
 
@@ -34,7 +44,7 @@ export class StoreSelectedChatService {
       messages: [...currentChat!.messages, messages],
       lastMessage: messages
     };
-    
+
     if (currentChat) {
       this._selectedChat.set({ ...currentChat, messages: [...currentChat.messages, messages], lastMessage: messages });
 

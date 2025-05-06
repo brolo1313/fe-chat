@@ -9,11 +9,14 @@ import { AuthGoogleService } from '../auth/serice/auth-google.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 import { ChatApiService } from '../shared/services/chat-api.service';
 import { TruncateTextPipe } from '../shared/pipes/trucate-text.pipe';
-import { IChat } from '../chat-window/models/chat.models';
+import { IChat, IProfile } from '../chat-window/models/chat.models';
+import { ToggleAutoBotComponent } from '../shared/components/toggle-auto-bot/toggle-auto-bot.component';
+import { SocketService } from '../socket/socket.service';
+import { AutoBotStatusStoreService } from '../shared/services/auto-bot-status-store.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent, TruncateTextPipe],
+  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent, TruncateTextPipe, ToggleAutoBotComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
@@ -22,6 +25,8 @@ export class SidebarComponent implements OnDestroy {
   private authService = inject(AuthGoogleService);
   public localStorageService = inject(LocalStorageUserService);
   public chatApiService = inject(ChatApiService);
+  public socketService = inject(SocketService);
+  public autoBotStatusStoreService = inject(AutoBotStatusStoreService);
 
   readonly accessToken = computed(() => this.localStorageService.userSettings()?.accessToken);
   readonly photoUrl = computed(() => this.localStorageService.userSettings()?.picture);
@@ -55,13 +60,11 @@ export class SidebarComponent implements OnDestroy {
   private chatListFetched = false;
 
   constructor() {
-    console.log('photoUrl', this.photoUrl());
     effect(() => {
       const token = this.localStorageService.userSettings()?.accessToken;
       if (token && !this.chatListFetched) {
         this.chatListFetched = true;
         this.getChatList();
-        console.log('getChatList effect appear');
       }
     });
 
@@ -73,9 +76,14 @@ export class SidebarComponent implements OnDestroy {
   }
 
   private getChatList() {
-    this.chatApiService.getChatList().subscribe((response: any) => {
+    this.chatApiService.getProfile().subscribe((response: IProfile) => {
       this.storeSelectedChat.setAllChats(response.chats);
+      this.autoBotStatusStoreService.statusAutoBotValue = response.autoMessaging;
+      this.socketService.sendAutoBotStatus(response.autoMessaging);
     });
+  }
+  public toggleAutoBot(botStatus: boolean) {
+    this.socketService.sendAutoBotStatus(botStatus);
   }
 
   public signInWithGoogle(isAccessToken: boolean) {

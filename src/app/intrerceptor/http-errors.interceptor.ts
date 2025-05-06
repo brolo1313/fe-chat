@@ -39,17 +39,17 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
           authService.logout();
           toastService.showToaster(
             TOAST_STATE.danger,
-            `Your session has expired. Please log in again, error code: ${dataError.status}`
+            `Your session has expired. Please log in again. ${dataError.status}`
           );
           break;
         case 500:
           toastService.showToaster(
             TOAST_STATE.danger,
-            `Internal server error, error code: ${dataError.status}`
+            `Internal server error. ${dataError.status}`
           );
           break;
         case 505:
-          console.log(`Server not available, error code: ${dataError.status}`);
+          console.log(`Server not available. ${dataError.status}`);
           break;
         case 524:
           console.log('Please call the administrator', dataError.status);
@@ -60,7 +60,7 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
         default:
           toastService.showToaster(
             TOAST_STATE.danger,
-            `${dataError.statusText}please login again, error code: ${dataError.status}`
+            `${dataError.statusText}please login again. ${dataError.status}`
           );
           authService.logout();
           break;

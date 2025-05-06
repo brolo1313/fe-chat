@@ -19,3 +19,12 @@ export interface IChat {
     lastMessage?: IMessage;
 
 }
+
+export interface IProfile {
+    autoMessaging: boolean;
+    chats: IChat[];
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    user: string;
+}

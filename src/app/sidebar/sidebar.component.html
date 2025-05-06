@@ -5,6 +5,8 @@
         [source]="photoUrl()"
       ></app-user-avatar-placeholder>
 
+      <app-toggle-auto-bot *ngIf="accessToken()" (onToggleAutoBot)="toggleAutoBot($event)" [autoBotStatus]="autoBotStatusStoreService.statusAutoBotValue"></app-toggle-auto-bot>
+
       <div class="login-button">
         <div
           id="google-login-button"
