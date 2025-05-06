@@ -14,7 +14,7 @@ export interface IChat {
     firstName: string;
     lastName: string;
     messages: IMessage[];
-    message: string;
+    message?: string;
     imagePath?: string;
     lastMessage?: IMessage;
 

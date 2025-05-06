@@ -47,7 +47,7 @@
     @if (showEmptyData) {
     <ng-container *ngTemplateOutlet="emptyData"></ng-container>
     } @else {
-    <div *ngFor="let chat of filteredChats; trackBy: trackByFn">
+    <div *ngFor="let chat of filteredChats$;  trackBy: trackByFn">
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
         (click)="onSelectChat(chat)"

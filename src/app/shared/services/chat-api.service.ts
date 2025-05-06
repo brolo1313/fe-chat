@@ -26,7 +26,7 @@ export class ChatApiService {
         return this.http.delete(`${environment.apiUrl}/chat/delete/${id}`)
     }
 
-    public getMessagesByChatId(id: number | string) {
+    public getMessagesByChatId(id: number | string): any {
         return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`)
     }
 }

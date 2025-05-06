@@ -15,10 +15,9 @@ import { IChat } from '../chat-window/models/chat.models';
   selector: 'app-sidebar',
   imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent, TruncateTextPipe],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnDestroy {
-
   private storeSelectedChat = inject(StoreSelectedChatService);
   private authService = inject(AuthGoogleService);
   public localStorageService = inject(LocalStorageUserService);
@@ -30,16 +29,15 @@ export class SidebarComponent implements OnDestroy {
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';
 
-  public allChats: IChat[] = [];
-  public filteredChats: IChat[] = [];
-
   public localSelectedChat!: IChat | null;
-  public searchControl = new FormControl('')
-  public trackByFn = (index: number, item: any) => item?.id;
+  public searchControl = new FormControl('');
 
   public contextMenuVisible = false;
   public contextMenuPosition = { x: 0, y: 0 };
 
+  public trackByFn(index: number, chat: IChat): number | string {
+    return chat.id;
+  }
   private unsubscribe$ = new Subject();
 
   @HostListener('document:click')
@@ -47,27 +45,35 @@ export class SidebarComponent implements OnDestroy {
     this.contextMenuVisible = false;
   }
 
+  public filteredChats$: IChat[] = [];
+  public allChats$: IChat[] = [];
+
   get showEmptyData(): boolean {
-    return !this.accessToken() || !this.filteredChats?.length;
+    return !this.accessToken() || !this.filteredChats$.length;
   }
 
   private chatListFetched = false;
+
   constructor() {
     effect(() => {
       const token = this.localStorageService.userSettings()?.accessToken;
       if (token && !this.chatListFetched) {
         this.chatListFetched = true;
         this.getChatList();
+        console.log('getChatList effect appear');
       }
     });
 
+    effect(() => {
+      this.filteredChats$ = this.storeSelectedChat.filteredChats();
+      this.allChats$ = this.storeSelectedChat.allChats();
+    })
     this.setupSearchControl();
   }
 
   private getChatList() {
     this.chatApiService.getChatList().subscribe((response: any) => {
-      this.allChats = response.chats;
-      this.filteredChats = [...this.allChats];
+      this.storeSelectedChat.setAllChats(response.chats);
     });
   }
 
@@ -112,20 +118,19 @@ export class SidebarComponent implements OnDestroy {
 
   public handleConfirm(data: { firstName: string; lastName: string }): void {
     this.modalVisible = false;
-  
     const { firstName, lastName } = data;
-  
+
     switch (this.modalMode) {
       case 'create':
         this.createChat(firstName, lastName);
         break;
-  
+
       case 'edit':
         if (this.localSelectedChat?.id) {
           this.updateChat(this.localSelectedChat.id, firstName, lastName);
         }
         break;
-  
+
       case 'delete':
         if (this.localSelectedChat?.id) {
           this.deleteChat(this.localSelectedChat.id);
@@ -140,19 +145,20 @@ export class SidebarComponent implements OnDestroy {
       error: err => console.error('Create failed', err)
     });
   }
-  
+
   private updateChat(id: string | number, firstName: string, lastName: string): void {
     this.chatApiService.updateChat(id, { firstName, lastName }).subscribe({
       next: () => this.getChatList(),
       error: err => console.error('Update failed', err)
     });
   }
-  
+
   private deleteChat(id: string | number): void {
     this.chatApiService.deleteChat(id).subscribe({
       next: () => {
         this.getChatList();
         this.localSelectedChat = null;
+        this.storeSelectedChat.setSelectedChat(null);
       },
       error: err => console.error('Delete failed', err)
     });
@@ -160,21 +166,27 @@ export class SidebarComponent implements OnDestroy {
 
   public onSelectChat(chat: IChat) {
     this.localSelectedChat = chat;
-    this.storeSelectedChat.setSelectChatId(chat.id);
     this.storeSelectedChat.setSelectedChat(chat);
   }
-   private setupSearchControl(): void {
+
+  private setupSearchControl(): void {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       takeUntil(this.unsubscribe$)
     ).subscribe((searchValue: string | number | any) => {
+      if (!searchValue) {
+        return this.storeSelectedChat.setFilteredChats(this.storeSelectedChat.allChats());
+      }
+
       const query = searchValue?.toLowerCase() || '';
-      this.filteredChats = this.allChats.filter(chat =>
+      const filteredChats = this.storeSelectedChat.allChats().filter(chat =>
         chat.firstName?.toLowerCase().includes(query) ||
         chat.lastName?.toLowerCase().includes(query) ||
         (`${chat.firstName} ${chat.lastName}`.toLowerCase().includes(query))
       );
+
+      this.storeSelectedChat.setFilteredChats(filteredChats);
     });
   }
 

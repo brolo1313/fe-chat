@@ -4,28 +4,48 @@ import { IChat, IMessage } from '../../chat-window/models/chat.models';
 
 @Injectable({ providedIn: 'root' })
 export class StoreSelectedChatService {
-  private selectedChatId = new BehaviorSubject<number | string | null>(null);
-  selectedChatId$ = this.selectedChatId.asObservable();
-  
-  private _incomingMessage = signal<any>(null);
-  public incomingMessage = this._incomingMessage.asReadonly();
+  private _allChats = signal<IChat[]>([]);
+  public allChats = this._allChats.asReadonly();
 
-  private _selectedChat = signal<any>(null);
+  private _filteredChats = signal<IChat[]>([]);
+  public filteredChats = this._filteredChats.asReadonly();
+
+  private _selectedChat = signal<IChat | null>(null);
   public selectedChat = this._selectedChat.asReadonly();
-  setSelectChatId(id: number | string) {
-    this.selectedChatId.next(id);
+
+  setAllChats(chats: IChat[]): void {
+    this._allChats.set(chats);
+    this._filteredChats.set(chats);
   }
 
-  setSelectedChat(chat: IChat) {
+  setFilteredChats(chats: IChat[]): void {
+    this._filteredChats.set(chats);
+  }
+
+  setSelectedChat(chat: IChat | null): void {
     this._selectedChat.set(chat);
   }
 
-  updateSelectedChat(messages: IMessage[]) {
+  updateSelectedChat(messages: IMessage) {
     const currentChat = this._selectedChat();
-    this._selectedChat.set({ ...currentChat, messages: [...currentChat.messages, ...messages] });
+
+    const updatedChat: IChat | any = {
+      ...currentChat,
+      messages: [...currentChat!.messages, messages],
+      lastMessage: messages
+    };
+    
+    if (currentChat) {
+      this._selectedChat.set({ ...currentChat, messages: [...currentChat.messages, messages], lastMessage: messages });
+
+      this._filteredChats.update(chats => this.updateChatInList(chats, updatedChat));
+      this._allChats.update(chats => this.updateChatInList(chats, updatedChat));
+    }
   }
 
-  setIncomingMessage(message: any) {
-    this._incomingMessage.set(message);
+  private updateChatInList(list: IChat[], updatedChat: IChat): IChat[] {
+    return list.map(chat =>
+      chat.id === updatedChat.id ? { ...chat, ...updatedChat } : chat
+    );
   }
 }

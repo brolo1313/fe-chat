@@ -28,7 +28,8 @@ export class SocketService {
 
         this.onMessage((data) => {
             const {chatId, message} = data;
-            this.storeSelectedChatService.updateSelectedChat([message]);
+            console.log('onMessage', data);
+            this.storeSelectedChatService.updateSelectedChat(message);
         });
     }
 

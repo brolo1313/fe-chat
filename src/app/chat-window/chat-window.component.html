@@ -1,23 +1,23 @@
 <section class="chat-window d-flex flex-column">
   <header class="chat-header d-flex just items-center">
     <app-user-avatar-placeholder
-      [source]="selectedChat?.imagePath ?? ''"
+      [source]="selectedChatLocalSignal()?.imagePath ?? ''"
     ></app-user-avatar-placeholder>
 
     @if(accessToken) {
     <div class="chat-title">
       {{
-        selectedChat ? selectedChat.firstName + " " + selectedChat.lastName : ""
+        selectedChatLocalSignal() ? selectedChatLocalSignal().firstName + " " + selectedChatLocalSignal().lastName : ""
       }}
     </div>
 
     }
   </header>
 
-  @if(selectedChat && accessToken) {
+  @if(selectedChatLocalSignal() && accessToken) {
   <div class="message-content full-height overflow-auto" #chatContainer>
     <div
-      *ngFor="let message of selectedChat?.messages"
+      *ngFor="let message of selectedChatLocalSignal()?.messages"
       [ngClass]="{ 'message-row': true, own: !message?.isBot }"
       class="p-1"
     >
@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  @if(selectedChat){
+  @if(selectedChatLocalSignal()){
   <footer class="message-input-wrapper d-flex p-1 mt-auto">
     <input
       [formControl]="messageControl"

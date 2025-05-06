@@ -25,8 +25,10 @@ export class ChatWindowComponent {
   public accessToken: string | null | undefined = null;
   public messageControl = new FormControl('', [Validators.required])
 
-  public selectedChat!: IChat | null;
   public isMessageLoading = signal(true);
+
+  public selectedChatLocalSignal = signal<IChat | any>(null);
+  private lastLoadedChatId: number | string | null = null; // ✅ відстежуємо, чи вже був запит
 
   get messageFC() {
     return this.messageControl.value;
@@ -35,26 +37,39 @@ export class ChatWindowComponent {
   constructor() {
     effect(() => {
       this.accessToken = this.localStorageService.userSettings()?.accessToken;
-      this.selectedChat = this.storeSelectedChat.selectedChat();
+    });
+
+    effect(() => {
+      const chat = this.storeSelectedChat.selectedChat();
+      if (!chat || chat.id === this.lastLoadedChatId) return;
+
+      this.isMessageLoading.set(true);
+      this.apiService.getMessagesByChatId(chat.id).subscribe({
+        next: (response: IChat) => {
+          this.lastLoadedChatId = chat.id;
+          this.storeSelectedChat.setSelectedChat(response);
+          this.isMessageLoading.set(false);
+        },
+        error: (err: any) => {
+          console.error('Failed to load messages:', err);
+          this.isMessageLoading.set(false);
+        }
+      });
+    });
+
+    effect(() => {
+      this.selectedChatLocalSignal.set(this.storeSelectedChat.selectedChat());
     });
   }
 
   ngOnInit() {
-    this.storeSelectedChat.selectedChatId$.subscribe((id) => {
-      this.isMessageLoading.set(true);
-      if (id) {
-        this.apiService.getMessagesByChatId(id).subscribe((response: any) => {
-          this.storeSelectedChat.setSelectedChat(response);
-          this.isMessageLoading.set(false);
-        });
-      }
-    });
+    const chat = this.storeSelectedChat.selectedChat()
   }
 
   sendMessage(msg: string) {
     if (msg.trim()) {
       this.socketService.sendMessage({
-        chatId: this.selectedChat?.id!,
+        chatId: this.selectedChatLocalSignal()?.id,
         text: msg,
       });
       this.messageControl.reset();
