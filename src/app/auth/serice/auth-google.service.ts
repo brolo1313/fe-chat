@@ -4,6 +4,7 @@ import { AuthDataGoogle, LocalStorageUserService } from "../../shared/services/l
 import { environment } from "../../../environments/environment";
 import { AuthConfig, OAuthService } from "angular-oauth2-oidc";
 import { SocketService } from "../../socket/socket.service";
+import { TOAST_STATE, ToastService } from "../../shared/services/toast.service";
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +17,7 @@ export class AuthGoogleService {
     private socketService = inject(SocketService);
     private localStorageService = inject(LocalStorageUserService);
     private oAuthService = inject(OAuthService);
+    private toastService = inject(ToastService);
 
     constructor() {
         this.initConfiguration();
@@ -79,8 +81,16 @@ export class AuthGoogleService {
                 next: (response: AuthDataGoogle) => {
                     this.localStorageService.setUserSettings(response);
                     this.socketService.connect(response.accessToken);
+                    this.toastService.showToaster(
+                        TOAST_STATE.success,
+                        `You have successfully logged in! Hi ${user.given_name}`
+                    );
                 },
                 error: (error) => {
+                    this.toastService.showToaster(
+                        TOAST_STATE.danger,
+                        'Something went wrong, please try again'
+                    );
                     console.log('sendProfileToBackend error', error);
                 }
             });

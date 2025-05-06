@@ -1,0 +1,15 @@
+<ng-container *ngIf="toastService.showToast()">
+  <div
+    [@toastTrigger]="toastService.showToast() ? 'open' : 'close'"
+    class="toast-class"
+    [ngClass]="toastService.toastState()"
+  >
+    <div class="toast-message-block">
+      {{ toastService.toastMessage() }}
+    </div>
+
+    <!-- <a class="close-btn" (click)="dismiss()">
+      <small> X </small>
+    </a> -->
+  </div>
+</ng-container>

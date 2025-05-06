@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { httpErrorsInterceptor } from './intrerceptor/http-errors.interceptor';
 import { provideOAuthClient } from 'angular-oauth2-oidc';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
       [httpErrorsInterceptor,]
     )
   ),
+  provideAnimationsAsync(),
   provideOAuthClient(),
   ]
 };

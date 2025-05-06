@@ -3,10 +3,11 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { LocalStorageUserService } from './shared/services/local-storage-user.service';
 import { SocketService } from './socket/socket.service';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-  imports: [SidebarComponent, ChatWindowComponent],
+  imports: [SidebarComponent, ChatWindowComponent, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

@@ -1,14 +1,16 @@
 import type { HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { computed, inject, Injector } from '@angular/core';
+import { inject, Injector } from '@angular/core';
 import { AuthGoogleService } from '../auth/serice/auth-google.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
+import { TOAST_STATE, ToastService } from '../shared/services/toast.service';
 
 
 
 export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
   const injector = inject(Injector);
   const localStorageService = injector.get(LocalStorageUserService);
+  const toastService = injector.get(ToastService);
 
   const userSettings = localStorageService.userSettings();
   const accessToken = userSettings?.accessToken;
@@ -35,22 +37,31 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
       switch (dataError.status) {
         case 401:
           authService.logout();
-          console.log(`Ваша сесія застаріла. Увійдіть знову, код помилки: ${dataError.status}`);
+          toastService.showToaster(
+            TOAST_STATE.danger,
+            `Your session has expired. Please log in again, error code: ${dataError.status}`
+          );
           break;
         case 500:
-          console.log('Виникла помилка на сервері', dataError.status);
+          toastService.showToaster(
+            TOAST_STATE.danger,
+            `Internal server error, error code: ${dataError.status}`
+          );
           break;
         case 505:
-          console.log(`На даний момент сервер недоступний, код: ${dataError.status}`);
+          console.log(`Server not available, error code: ${dataError.status}`);
           break;
         case 524:
-          console.log('Будь ласка, зверніться до підтримки', dataError.status);
+          console.log('Please call the administrator', dataError.status);
           break;
         case 404:
-          console.log('Ресурс не знайдено', dataError.status);
+          console.log('Resource not found', dataError.status);
           break;
         default:
-          console.log('Неочікувана помилка', error.status);
+          toastService.showToaster(
+            TOAST_STATE.danger,
+            `${dataError.statusText}please login again, error code: ${dataError.status}`
+          );
           authService.logout();
           break;
       }
