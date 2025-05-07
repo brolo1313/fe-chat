@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TooltipDirective } from '../../directives/tooltip.directive';
 
 @Component({
   selector: 'app-toggle-auto-bot',
-  imports: [],
+  imports: [TooltipDirective],
   templateUrl: './toggle-auto-bot.component.html',
   styleUrl: './toggle-auto-bot.component.scss'
 })

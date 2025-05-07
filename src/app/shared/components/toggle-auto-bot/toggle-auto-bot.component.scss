@@ -56,8 +56,18 @@ input:checked + .slider::before {
 .icon-wrapper {
   width: 30px;
   height: 30px;
-  .active{
-    fill: #4caf50 ;
+  cursor: help;
+
+   svg {
+    transition: fill 0.3s ease;
+
+    &.active {
+      fill: #4caf50;
+    }
+
+    &:hover {
+      fill: #3e8e41;
+    }
   }
 }
 

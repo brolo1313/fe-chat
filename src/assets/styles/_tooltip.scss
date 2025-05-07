@@ -1,0 +1,16 @@
+.custom-tooltip {
+  position: absolute;
+  top: 25px;
+  left: 280px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: lightgrey;
+
+  color: #000;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}

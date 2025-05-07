@@ -39,8 +39,12 @@ export class SocketService {
             if (message.chat === this.storeSelectedChatService.selectedChat()?.id) {
                 this.storeSelectedChatService.updateSelectedChat(message);
             }
-            this.toastService.showToaster(TOAST_STATE.success,  `New message for <strong>${fullName}</strong>`);
+            this.toastService.showToaster(TOAST_STATE.success, `New message for <strong>${fullName}</strong>`);
         })
+    }
+
+    getSocket(): Socket {
+        return this.socket;
     }
 
     sendMessage(payload: { chatId: string; text: string }) {
@@ -61,12 +65,14 @@ export class SocketService {
 
     disconnect() {
         if (this.socket) {
-            console.log('Socket disconnected:', this.socket.id);
+            this.socket.off('new-message');
+            this.socket.off('auto-bot-message');
+            this.socket.off('connect');
+            this.socket.off('connect_error');
+            this.socket.off('error');
             this.socket.disconnect();
+            console.log('Socket disconnected:', this.socket.id);
         }
     }
 
-    getSocket(): Socket {
-        return this.socket;
-    }
 }
