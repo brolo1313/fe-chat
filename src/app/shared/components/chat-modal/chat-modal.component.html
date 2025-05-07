@@ -28,26 +28,19 @@
 
   <ng-template #messageTemplate>
     <h2>Edit Message</h2>
-    <div
-      *ngIf="mode === 'edit'"
-      class="form d-flex flex-column"
-    >
+    <div *ngIf="mode === 'edit'" class="form d-flex flex-column">
       <label for="message">Message:</label>
-      <input
-        id="message"
-        type="text"
-        [formControl]="message"
-      />
+      <input id="message" type="text" [formControl]="message" />
     </div>
     <p *ngIf="mode === 'delete'">
-      Are you sure you want to delete this message:
-      <strong>{{ messageData?.text }}</strong>?
+      Are you sure you want to <strong>delete this message</strong>?
     </p>
   </ng-template>
 
   <p *ngIf="mode === 'delete' && !isForMessage">
     Are you sure you want to delete chat
-    <strong>{{ chat?.firstName }} {{ chat?.lastName }}</strong>?
+    <strong>{{ chat?.firstName }} {{ chat?.lastName }}</strong
+    >?
   </p>
 
   <div class="actions d-flex">
@@ -56,10 +49,8 @@
       class="full-width"
       [disabled]="
         (mode === 'create' || mode === 'edit') &&
-        (
-          (!isForMessage && (!firstName.valid || !lastName.valid)) ||
-          (isForMessage && !message.valid)
-        )
+        ((!isForMessage && (!firstName.valid || !lastName.valid)) ||
+          (isForMessage && !message.valid))
       "
       (click)="onConfirm()"
     >

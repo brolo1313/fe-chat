@@ -1,21 +1,21 @@
 <section class="chat-window d-flex flex-column">
   <header class="chat-header d-flex just items-center">
     <app-user-avatar-placeholder
-      [source]="selectedChatLocalSignal()?.imagePath ?? ''"
+      [source]="storeSelectedChat.selectedChat()?.imagePath ?? ''"
     ></app-user-avatar-placeholder>
 
-    @if(accessToken && selectedChatLocalSignal()) {
+    @if(accessToken && storeSelectedChat.selectedChat()) {
     <div class="chat-title">
       <ng-container *ngTemplateOutlet="chatNameTemplate"></ng-container>
     </div>
     }
   </header>
 
-  @if(selectedChatLocalSignal() && accessToken) {
+  @if(storeSelectedChat.selectedChat() && accessToken) {
   <div class="message-content full-height overflow-auto" #chatContainer>
     <div
       *ngFor="
-        let message of selectedChatLocalSignal()?.messages;
+        let message of storeSelectedChat.selectedChat()?.messages;
         let i = index;
         trackBy: trackByFn
       "
@@ -40,7 +40,7 @@
     </div>
   </div>
 
-  @if(selectedChatLocalSignal()){
+  @if(storeSelectedChat.selectedChat()){
   <footer class="message-input-wrapper d-flex p-1 mt-auto">
     <input
       [formControl]="messageControl"
@@ -66,8 +66,8 @@
 
 <ng-template #chatNameTemplate>
   <div class="chat-name d-flex fw-bold">
-    <div class="mr-05">{{ selectedChatLocalSignal().firstName }}</div>
-    <div>{{ selectedChatLocalSignal().lastName }}</div>
+    <div class="mr-05">{{ storeSelectedChat.selectedChat()?.firstName }}</div>
+    <div>{{ storeSelectedChat.selectedChat()?.lastName }}</div>
   </div>
 </ng-template>
 

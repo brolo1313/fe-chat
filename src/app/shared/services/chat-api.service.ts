@@ -31,8 +31,8 @@ export class ChatApiService {
         return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`)
     }
 
-    public deleteMessage(id: number | string) {
-        return this.http.delete(`${environment.apiUrl}/chat/deleteMessage/${id}`)
+    public deleteMessage(id: number | string): Observable<{ success: boolean, messageData: { chatId: string, messageId: string, text: string, isLast: boolean } }> {
+        return this.http.delete<{ success: boolean, messageData: { chatId: string, messageId: string, text: string, isLast: boolean } }>(`${environment.apiUrl}/message/delete/${id}`)
     }
 
     public updateMessage(id: number | string, message: string) {

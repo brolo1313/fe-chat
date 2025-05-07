@@ -58,4 +58,24 @@ export class StoreSelectedChatService {
       chat.id === updatedChat.id ? { ...chat, ...updatedChat } : chat
     );
   }
+
+  findCHatByIdAndDeleteMessage(data: { success: boolean, messageData: { chatId: string, messageId: string, text: string, isLast: boolean } }): void {
+    const { success, messageData } = data;
+    const messageId = messageData.messageId;
+    const chatId = messageData.chatId;
+    const chat = this._selectedChat();
+
+    if (!chat || chat.id !== chatId) return;
+
+    const updatedMessages = chat.messages.filter(
+      msg => msg.id?.toString() !== messageId
+    );
+
+    const updatedChat = { ...chat, messages: updatedMessages };
+    this._selectedChat.set(updatedChat);
+
+    if (messageData.isLast) {
+      this._filteredChats.update(chats => chats.map(chat => chat.id === chatId ? { ...chat, lastMessage: updatedChat.messages[chat.messages.length - 2] } : chat));
+    }
+  }
 }

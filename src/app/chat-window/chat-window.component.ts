@@ -20,7 +20,7 @@ import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.c
   styleUrl: './chat-window.component.scss'
 })
 export class ChatWindowComponent {
-  private storeSelectedChat = inject(StoreSelectedChatService);
+  public storeSelectedChat = inject(StoreSelectedChatService);
   private apiService = inject(ChatApiService);
   private localStorageService = inject(LocalStorageUserService);
   private socketService = inject(SocketService);
@@ -32,7 +32,6 @@ export class ChatWindowComponent {
 
   public isMessageLoading = signal(true);
 
-  public selectedChatLocalSignal = signal<IChat | any>(null);
   private lastLoadedChatId: number | string | null = null;
 
   public contextMenuVisible = false;
@@ -77,16 +76,12 @@ export class ChatWindowComponent {
         }
       });
     });
-
-    effect(() => {
-      this.selectedChatLocalSignal.set(this.storeSelectedChat.selectedChat());
-    });
   }
 
   sendMessage(msg: string) {
     if (msg.trim()) {
       this.socketService.sendMessage({
-        chatId: this.selectedChatLocalSignal()?.id,
+        chatId: this.storeSelectedChat.selectedChat()!?.id,
         text: msg,
       });
       this.messageControl.reset();
@@ -137,6 +132,7 @@ export class ChatWindowComponent {
 
   private deleteMessage(id: string | number): void {
     this.apiService.deleteMessage(id).subscribe({
+      next: (data:{ success: boolean, messageData: { chatId: string, messageId: string, text: string , isLast: boolean } }) => this.storeSelectedChat.findCHatByIdAndDeleteMessage(data),
       error: (err: any) => console.error('Delete failed', err)
     });
   }
