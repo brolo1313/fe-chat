@@ -34,7 +34,11 @@
           <span>{{ message?.text }}</span>
         </div>
         <div class="message-time" [class.loading]="isMessageLoading()">
-          {{ message?.createdAt | date : "medium" }}
+          {{
+            message.updatedAt > message.createdAt
+              ? "Edit: " + (message.updatedAt | date : "medium")
+              : (message.createdAt | date : "medium")
+          }}
         </div>
       </div>
     </div>

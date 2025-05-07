@@ -34,7 +34,14 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
       console.log('error httpErrorsInterceptor', dataError);
 
       const authService = injector.get(AuthGoogleService);
+
       switch (dataError.status) {
+        case 400:
+          toastService.showToaster(
+            TOAST_STATE.danger,
+            `${dataError.statusText}. ${dataError.status}`
+          );
+          break;
         case 401:
           authService.logout();
           toastService.showToaster(

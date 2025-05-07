@@ -37,6 +37,7 @@ export class SidebarComponent implements OnDestroy {
 
   readonly accessToken = computed(() => this.localStorageService.userSettings()?.accessToken);
   readonly photoUrl = computed(() => this.localStorageService.userSettings()?.picture);
+  readonly userName = computed(() => this.localStorageService.userSettings()?.firstName);
 
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';

@@ -35,7 +35,7 @@ export class SocketService {
 
         this.onAutoBotMessage((data) => {
             const { message, fullName } = data
-            this.storeSelectedChatService.findChatByIdAndUpdateMessage(message);
+            this.storeSelectedChatService.addMessageToChat(message);
             if (message.chat === this.storeSelectedChatService.selectedChat()?.id) {
                 this.storeSelectedChatService.updateSelectedChat(message);
             }

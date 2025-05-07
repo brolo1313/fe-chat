@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { IChat, IMessage } from '../../chat-window/models/chat.models';
+import { IMessageDeleteResponse, IMessageUpdateResponse } from './chat-api.service';
 
 @Injectable({ providedIn: 'root' })
 export class StoreSelectedChatService {
@@ -26,56 +26,88 @@ export class StoreSelectedChatService {
     this._selectedChat.set(chat);
   }
 
-  findChatByIdAndUpdateMessage(data: IMessage): IChat | undefined {
-    const chatToUpdate = this._allChats().find(chat => chat.id === data.chat);
-    if (!chatToUpdate) return;
-    chatToUpdate?.messages.push(data);
-    chatToUpdate!.lastMessage = data;
-
-    this._allChats.set(this._allChats().map(chat => chat.id === data.chat ? chatToUpdate : chat));
-    return
-  }
-
-  updateSelectedChat(messages: IMessage) {
-    const currentChat = this._selectedChat();
-
-    const updatedChat: IChat | any = {
-      ...currentChat,
-      messages: [...currentChat!.messages, messages],
-      lastMessage: messages
-    };
-
-    if (currentChat) {
-      this._selectedChat.set({ ...currentChat, messages: [...currentChat.messages, messages], lastMessage: messages });
-
-      this._filteredChats.update(chats => this.updateChatInList(chats, updatedChat));
-      this._allChats.update(chats => this.updateChatInList(chats, updatedChat));
-    }
+  private updateChatsInListById(updatedChat: IChat): void {
+    this._allChats.update(chats => this.updateChatInList(chats, updatedChat));
+    this._filteredChats.update(chats => this.updateChatInList(chats, updatedChat));
   }
 
   private updateChatInList(list: IChat[], updatedChat: IChat): IChat[] {
-    return list.map(chat =>
-      chat.id === updatedChat.id ? { ...chat, ...updatedChat } : chat
-    );
+    return list.map(chat => chat.id === updatedChat.id ? { ...chat, ...updatedChat } : chat);
   }
 
-  findCHatByIdAndDeleteMessage(data: { success: boolean, messageData: { chatId: string, messageId: string, text: string, isLast: boolean } }): void {
-    const { success, messageData } = data;
-    const messageId = messageData.messageId;
-    const chatId = messageData.chatId;
-    const chat = this._selectedChat();
+  private setSelectedChatMessages(messages: IMessage[], lastMessage?: IMessage): void {
+    const currentChat = this._selectedChat();
+    if (!currentChat) return;
 
+    this._selectedChat.set({
+      ...currentChat,
+      messages,
+      lastMessage: lastMessage ?? currentChat.lastMessage,
+    });
+  }
+
+  addMessageToChat(message: IMessage): void {
+    const chat = this._allChats().find(chat => chat.id === message.chat);
+    if (!chat) return;
+
+    const updatedChat: IChat = {
+      ...chat,
+      messages: [...chat.messages, message],
+      lastMessage: message,
+    };
+
+    this.updateChatsInListById(updatedChat);
+  }
+
+  updateSelectedChat(message: IMessage): void {
+    const currentChat = this._selectedChat();
+    if (!currentChat) return;
+
+    const updatedChat: IChat = {
+      ...currentChat,
+      messages: [...currentChat.messages, message],
+      lastMessage: message,
+    };
+
+    this._selectedChat.set(updatedChat);
+    this.updateChatsInListById(updatedChat);
+  }
+
+  findChatByIdAndDeleteMessage(data: IMessageDeleteResponse): void {
+    const { messageData } = data;
+    const { messageId, chatId, isLast } = messageData;
+
+    const chat = this._selectedChat();
     if (!chat || chat.id !== chatId) return;
 
-    const updatedMessages = chat.messages.filter(
-      msg => msg.id?.toString() !== messageId
+    const updatedMessages = chat.messages.filter(msg => msg.id?.toString() !== messageId);
+    const lastMessage = isLast ? updatedMessages.at(-1) : chat.lastMessage;
+
+    this.setSelectedChatMessages(updatedMessages, lastMessage);
+
+    if (isLast && lastMessage) {
+      const updatedChat: IChat = { ...chat, lastMessage };
+      this.updateChatsInListById(updatedChat);
+    }
+  }
+
+  findChatByIdAndUpdateMessage(data: IMessageUpdateResponse): void {
+    const { messageData, isLast } = data;
+    const { id: messageId, chat: chatId } = messageData;
+
+    const chat = this._selectedChat();
+    if (!chat || chat.id !== chatId) return;
+
+    const updatedMessages = chat.messages.map(msg =>
+      msg.id == messageId ? { ...msg, ...messageData } : msg
     );
 
-    const updatedChat = { ...chat, messages: updatedMessages };
-    this._selectedChat.set(updatedChat);
+    const lastMessage = isLast ? messageData : chat.lastMessage;
+    this.setSelectedChatMessages(updatedMessages, lastMessage);
 
-    if (messageData.isLast) {
-      this._filteredChats.update(chats => chats.map(chat => chat.id === chatId ? { ...chat, lastMessage: updatedChat.messages[chat.messages.length - 2] } : chat));
+    if (isLast) {
+      const updatedChat: IChat = { ...chat, lastMessage: messageData };
+      this.updateChatsInListById(updatedChat);
     }
   }
 }

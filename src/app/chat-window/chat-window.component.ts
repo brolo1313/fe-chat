@@ -3,7 +3,7 @@ import { Component, effect, ElementRef, HostListener, inject, signal, ViewChild 
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
-import { ChatApiService } from '../shared/services/chat-api.service';
+import { ChatApiService, IMessageDeleteResponse, IMessageUpdateResponse } from '../shared/services/chat-api.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 import { SocketService } from '../socket/socket.service';
 import { IChat, IMessage } from './models/chat.models';
@@ -126,13 +126,14 @@ export class ChatWindowComponent {
 
   private updateMessage(id: string | number, message: string): void {
     this.apiService.updateMessage(id, message).subscribe({
+      next: (data:IMessageUpdateResponse) => this.storeSelectedChat.findChatByIdAndUpdateMessage(data),
       error: (err: any) => console.error('Update failed', err)
     });
   }
 
   private deleteMessage(id: string | number): void {
     this.apiService.deleteMessage(id).subscribe({
-      next: (data:{ success: boolean, messageData: { chatId: string, messageId: string, text: string , isLast: boolean } }) => this.storeSelectedChat.findCHatByIdAndDeleteMessage(data),
+      next: (data:IMessageDeleteResponse) => this.storeSelectedChat.findChatByIdAndDeleteMessage(data),
       error: (err: any) => console.error('Delete failed', err)
     });
   }

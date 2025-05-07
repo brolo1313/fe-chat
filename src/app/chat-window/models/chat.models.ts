@@ -5,6 +5,7 @@ export interface IMessage {
     isBot: boolean;
     deleted: boolean;
     createdAt: string;
+    updatedAt: string;
     id: string;
 }
 

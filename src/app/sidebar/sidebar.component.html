@@ -1,9 +1,15 @@
 <aside class="sidebar d-flex flex-column">
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
-      <app-user-avatar-placeholder
-        [source]="photoUrl()"
-      ></app-user-avatar-placeholder>
+      <div class="d-flex flex-column items-center justify-center">
+        <app-user-avatar-placeholder
+          [source]="photoUrl()"
+        ></app-user-avatar-placeholder>
+
+        <div class="user-name">
+          <span>{{ userName() }}</span>
+        </div>
+      </div>
 
       <app-toggle-auto-bot
         *ngIf="accessToken()"

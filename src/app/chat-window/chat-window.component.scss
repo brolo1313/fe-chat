@@ -36,13 +36,20 @@
     align-items: flex-start;
     .message-time {
       text-align: start;
+      margin-right: auto;
+    }
+    .message-bubble {
+      margin-right: auto;
     }
   }
 
   .message-wrapper {
     max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 
-    .message-bubble.loading{
+    .message-bubble.loading {
       width: auto;
       height: auto;
     }
@@ -53,16 +60,20 @@
       padding: 0.5rem 1rem;
       border-radius: 1rem;
       word-wrap: break-word;
+      max-width: fit-content;
     }
 
     .message-time {
       font-size: 0.7rem;
       margin-top: 0.25rem;
       color: $secondary;
+      display: inline-block;
     }
   }
 
   &.own .message-wrapper {
+    align-items: flex-end;
+
     .message-bubble {
       background-color: $message-color;
       color: $light;
@@ -70,6 +81,7 @@
 
     .message-time {
       text-align: right;
+      align-self: flex-end;
     }
   }
 }

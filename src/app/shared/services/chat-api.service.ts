@@ -3,7 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { mockChatsList } from '../mocks/chat-list.mock';
-import { IProfile } from '../../chat-window/models/chat.models';
+import { IMessage, IProfile } from '../../chat-window/models/chat.models';
+
+export interface IMessageDeleteResponse {
+    success: boolean;
+    messageData: {
+        chatId: string;
+        messageId: string;
+        text: string;
+        isLast: boolean;
+    };
+}
+
+export interface IMessageUpdateResponse {
+    success: boolean;
+    messageData: IMessage
+    isLast: boolean
+}
 
 @Injectable({ providedIn: 'root' })
 export class ChatApiService {
@@ -31,11 +47,11 @@ export class ChatApiService {
         return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`)
     }
 
-    public deleteMessage(id: number | string): Observable<{ success: boolean, messageData: { chatId: string, messageId: string, text: string, isLast: boolean } }> {
-        return this.http.delete<{ success: boolean, messageData: { chatId: string, messageId: string, text: string, isLast: boolean } }>(`${environment.apiUrl}/message/delete/${id}`)
+    public deleteMessage(id: number | string): Observable<IMessageDeleteResponse> {
+        return this.http.delete<IMessageDeleteResponse>(`${environment.apiUrl}/message/delete/${id}`)
     }
 
-    public updateMessage(id: number | string, message: string) {
-        return this.http.put(`${environment.apiUrl}/chat/updateMessage/${id}`, message)
+    public updateMessage(id: number | string, message: string): Observable<IMessageUpdateResponse> {
+        return this.http.put<IMessageUpdateResponse>(`${environment.apiUrl}/message/update/${id}`, { message: message })
     }
 }
