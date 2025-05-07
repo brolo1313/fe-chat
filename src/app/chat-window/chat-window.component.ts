@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
@@ -7,10 +7,15 @@ import { ChatApiService } from '../shared/services/chat-api.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 import { SocketService } from '../socket/socket.service';
 import { IChat, IMessage } from './models/chat.models';
+import { ContextMenuComponent } from '../shared/components/context-menu/context-menu.component';
+import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.component';
 
 @Component({
   selector: 'app-chat-window',
-  imports: [CommonModule, UserAvatarPlaceholderComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, UserAvatarPlaceholderComponent,
+    FormsModule, ReactiveFormsModule,
+    ContextMenuComponent, ChatModalComponent],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss'
 })
@@ -29,7 +34,20 @@ export class ChatWindowComponent {
 
   public selectedChatLocalSignal = signal<IChat | any>(null);
   private lastLoadedChatId: number | string | null = null;
-  
+
+  public contextMenuVisible = false;
+  public contextMenuPosition = { x: 0, y: 0 };
+
+  public modalVisible = false;
+  public modalMode: 'create' | 'delete' | 'edit' = 'create';
+
+  public localSelectedChatMessage!: IMessage;
+  public chat = this.storeSelectedChat.selectedChat()
+
+  @HostListener('document:click')
+  hideContextMenu() {
+    this.contextMenuVisible = false;
+  }
   public trackByFn(index: number, messages: IMessage): number | string {
     return messages.id;
   }
@@ -82,6 +100,68 @@ export class ChatWindowComponent {
     this.scrollToBottom();
   }
 
+  public editChatContextMenu() {
+    this.contextMenuVisible = false;
+    this.showEditModal();
+  }
+
+  public deleteChatContextMenu() {
+    this.contextMenuVisible = false;
+    this.showDeleteModal();
+  }
+
+  public handleConfirm(data: { id: string, message: string }): void {
+    this.modalVisible = false;
+    // const { firstName, lastName } = data;
+
+    switch (this.modalMode) {
+      case 'edit':
+        if (data) {
+          this.updateMessage(data.id, data.message);
+        }
+        break;
+
+      case 'delete':
+        if (data) {
+          this.deleteMessage(data?.id);
+        }
+        break;
+    }
+  }
+
+  private updateMessage(id: string | number, message: string): void {
+    this.apiService.updateMessage(id, message).subscribe({
+      error: (err: any) => console.error('Update failed', err)
+    });
+  }
+
+  private deleteMessage(id: string | number): void {
+    this.apiService.deleteMessage(id).subscribe({
+      error: (err: any) => console.error('Delete failed', err)
+    });
+  }
+
+  public onRightClick(event: MouseEvent, message: IMessage) {
+    event.preventDefault();
+    this.localSelectedChatMessage = message;
+    this.contextMenuPosition = {
+      x: event.clientX,
+      y: event.clientY
+    };
+    this.contextMenuVisible = true;
+  }
+
+
+  public showEditModal() {
+    this.modalMode = 'edit';
+    this.modalVisible = true;
+  }
+
+  public showDeleteModal() {
+    this.modalMode = 'delete';
+    this.modalVisible = true;
+
+  }
   private scrollToBottom(): void {
     const container = this.chatContainer?.nativeElement;
     if (container) {

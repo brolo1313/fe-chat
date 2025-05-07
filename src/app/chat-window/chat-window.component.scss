@@ -42,6 +42,11 @@
   .message-wrapper {
     max-width: 300px;
 
+    .message-bubble.loading{
+      width: auto;
+      height: auto;
+    }
+
     .message-bubble {
       background-color: $message-conversation-partner;
       color: $secondary;
@@ -90,6 +95,9 @@
   font-size: 1.2rem;
 }
 
+.send-btn:disabled {
+  background-color: $secondary !important;
+}
 .message-bubble.loading {
   width: 100px;
   height: 40px;

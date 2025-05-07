@@ -26,7 +26,11 @@
       class="p-1"
     >
       <div class="message-wrapper d-flex flex-column">
-        <div class="message-bubble" [class.loading]="isMessageLoading()">
+        <div
+          class="message-bubble"
+          [class.loading]="isMessageLoading()"
+          (contextmenu)="onRightClick($event, message)"
+        >
           <span>{{ message?.text }}</span>
         </div>
         <div class="message-time" [class.loading]="isMessageLoading()">
@@ -66,3 +70,19 @@
     <div>{{ selectedChatLocalSignal().lastName }}</div>
   </div>
 </ng-template>
+
+<app-context-menu
+  [contextMenuVisible]="contextMenuVisible"
+  [contextMenuPosition]="contextMenuPosition"
+  (editChat)="editChatContextMenu()"
+  (deleteChat)="deleteChatContextMenu()"
+></app-context-menu>
+
+<app-chat-modal
+  *ngIf="modalVisible"
+  [isForMessage]="true"
+  [mode]="modalMode"
+  [messageData]="localSelectedChatMessage"
+  (confirm)="handleConfirm($event)"
+  (cancel)="modalVisible = false"
+></app-chat-modal>

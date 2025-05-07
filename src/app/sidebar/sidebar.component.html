@@ -94,12 +94,9 @@
   (cancel)="modalVisible = false"
 ></app-chat-modal>
 
-<ul
-  class="custom-menu"
-  [class.visible]="contextMenuVisible"
-  [style.left.px]="contextMenuPosition.x"
-  [style.top.px]="contextMenuPosition.y"
->
-  <li (click)="editChatContextMenu()">Редагувати</li>
-  <li (click)="deleteChatContextMenu()">Видалити</li>
-</ul>
+<app-context-menu
+  [contextMenuVisible]="contextMenuVisible"
+  [contextMenuPosition]="contextMenuPosition"
+  (editChat)="editChatContextMenu()"
+  (deleteChat)="deleteChatContextMenu()"
+></app-context-menu>

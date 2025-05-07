@@ -30,4 +30,12 @@ export class ChatApiService {
     public getMessagesByChatId(id: number | string): any {
         return this.http.get(`${environment.apiUrl}/chat/getMessages/${id}`)
     }
+
+    public deleteMessage(id: number | string) {
+        return this.http.delete(`${environment.apiUrl}/chat/deleteMessage/${id}`)
+    }
+
+    public updateMessage(id: number | string, message: string) {
+        return this.http.put(`${environment.apiUrl}/chat/updateMessage/${id}`, message)
+    }
 }

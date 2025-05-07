@@ -1,0 +1,9 @@
+<ul
+  class="custom-menu"
+  [class.visible]="contextMenuVisible"
+  [style.left.px]="contextMenuPosition.x"
+  [style.top.px]="contextMenuPosition.y"
+>
+  <li (click)="onCLickEdit()">{{textEdit}}</li>
+  <li (click)="onCLickDelete()">{{textDelete}}</li>
+</ul>

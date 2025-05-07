@@ -1,6 +1,5 @@
 @use "../../../../assets/styles/variables" as *;
 
-
 .backdrop {
   position: fixed;
   top: 0;
@@ -56,15 +55,18 @@
       border: none;
       cursor: pointer;
       border-radius: 4px;
+      text-align: center;
+      color: $primary;
     }
 
-    button:last-child {
-      background-color: $primary;
-      color: white;
+    button:disabled {
+      color: $secondary !important;
+      cursor: not-allowed;
     }
 
-    button:first-child {
-      background-color: #ddd;
+    button:hover:not(:disabled) {
+      background-color: rgba($primary, 0.2);
+      transition: background-color 0.5s ease, opacity 0.5s ease;
     }
   }
 }

@@ -14,10 +14,16 @@ import { ToggleAutoBotComponent } from '../shared/components/toggle-auto-bot/tog
 import { SocketService } from '../socket/socket.service';
 import { AutoBotStatusStoreService } from '../shared/services/auto-bot-status-store.service';
 import { GoogleLoginButtonComponent } from '../auth/components/google-login-button/google-login-button.component';
+import { ContextMenuComponent } from '../shared/components/context-menu/context-menu.component';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent, TruncateTextPipe, ToggleAutoBotComponent, GoogleLoginButtonComponent],
+  imports: [
+    CommonModule, UserAvatarPlaceholderComponent,
+    ReactiveFormsModule, ChatModalComponent,
+    TruncateTextPipe, ToggleAutoBotComponent,
+    GoogleLoginButtonComponent,
+    ContextMenuComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
