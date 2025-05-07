@@ -4,30 +4,16 @@
   <h2 *ngIf="mode === 'create'">New Chat</h2>
   <h2 *ngIf="mode === 'edit'">Edit Chat</h2>
 
-  <div *ngIf="mode === 'create'" class="form">
-    <label>
-      First Name:
-      <input type="text" [formControl]="firstName" />
-    </label>
-    <label>
-      Last Name:
-      <input type="text" [formControl]="lastName" />
-    </label>
-  </div>
-
-  <div *ngIf="mode === 'edit'" class="form">
-    <label>
-      First Name:
-      <input type="text" [formControl]="firstName" />
-    </label>
-    <label>
-      Last Name:
-      <input type="text" [formControl]="lastName" />
-    </label>
+  <div *ngIf="mode === 'create' || mode === 'edit'" class="form d-flex flex-column">
+    <label for="firstName"> First Name: </label>
+    <input id="firstName" maxlength="15" type="text" [formControl]="firstName" />
+    <label id="lastName"> Last Name: </label>
+    <input id="lastName" maxlength="15" type="text" [formControl]="lastName" />
   </div>
 
   <p *ngIf="mode === 'delete'">
-    Are you sure you want to delete chat <strong>{{ chat?.firstName }} {{ chat?.lastName }}</strong
+    Are you sure you want to delete chat
+    <strong>{{ chat?.firstName }} {{ chat?.lastName }}</strong
     >?
   </p>
 

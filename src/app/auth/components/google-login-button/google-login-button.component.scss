@@ -1,0 +1,29 @@
+@use "../../../../assets/styles/variables" as *;
+
+.google-auth-button {
+  gap: 0.5rem;
+  background-color: white;
+  color: #444;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: $border-radius;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f7f7f7;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}

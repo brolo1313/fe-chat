@@ -6,7 +6,7 @@ import { StoreSelectedChatService } from '../shared/services/store-selected-chat
 import { ChatApiService } from '../shared/services/chat-api.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 import { SocketService } from '../socket/socket.service';
-import { IChat } from './models/chat.models';
+import { IChat, IMessage } from './models/chat.models';
 
 @Component({
   selector: 'app-chat-window',
@@ -28,8 +28,11 @@ export class ChatWindowComponent {
   public isMessageLoading = signal(true);
 
   public selectedChatLocalSignal = signal<IChat | any>(null);
-  private lastLoadedChatId: number | string | null = null; // ✅ відстежуємо, чи вже був запит
-
+  private lastLoadedChatId: number | string | null = null;
+  
+  public trackByFn(index: number, messages: IMessage): number | string {
+    return messages.id;
+  }
   get messageFC() {
     return this.messageControl.value;
   }
@@ -60,10 +63,6 @@ export class ChatWindowComponent {
     effect(() => {
       this.selectedChatLocalSignal.set(this.storeSelectedChat.selectedChat());
     });
-  }
-
-  ngOnInit() {
-    const chat = this.storeSelectedChat.selectedChat()
   }
 
   sendMessage(msg: string) {

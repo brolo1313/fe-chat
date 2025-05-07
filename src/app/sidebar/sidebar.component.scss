@@ -60,6 +60,10 @@ hr {
   }
 }
 
+.chat-list {
+  scrollbar-width: thin;
+}
+
 .chat-list-title {
   color: $primary;
   margin-bottom: 2rem;

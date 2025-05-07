@@ -5,17 +5,16 @@
         [source]="photoUrl()"
       ></app-user-avatar-placeholder>
 
-      <app-toggle-auto-bot *ngIf="accessToken()" (onToggleAutoBot)="toggleAutoBot($event)" [autoBotStatus]="autoBotStatusStoreService.statusAutoBotValue"></app-toggle-auto-bot>
+      <app-toggle-auto-bot
+        *ngIf="accessToken()"
+        (onToggleAutoBot)="toggleAutoBot($event)"
+        [autoBotStatus]="autoBotStatusStoreService.statusAutoBotValue"
+      ></app-toggle-auto-bot>
 
-      <div class="login-button">
-        <div
-          id="google-login-button"
-          class="login-button btn btn-primary"
-          (click)="signInWithGoogle(!!accessToken())"
-        >
-          {{ accessToken() ? "Log out with Google" : "Log in with Google" }}
-        </div>
-      </div>
+      <app-google-login-button
+        [isLoggedIn]="!!accessToken()"
+        (click)="handleLoginAndLogout(!!accessToken())"
+      ></app-google-login-button>
     </div>
 
     @if (accessToken()) {
@@ -49,22 +48,25 @@
     @if (showEmptyData) {
     <ng-container *ngTemplateOutlet="emptyData"></ng-container>
     } @else {
-    <div *ngFor="let chat of filteredChats$;  trackBy: trackByFn">
+    <div *ngFor="let chat of filteredChats$; trackBy: trackByFn">
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
         (click)="onSelectChat(chat)"
-        [ngClass]="{ 'active-chat': localSelectedChat?.id === chat?.id}"
+        [ngClass]="{ 'active-chat': localSelectedChat?.id === chat?.id }"
         (contextmenu)="onRightClick($event, chat)"
       >
         <app-user-avatar-placeholder
           [source]="chat.imagePath"
         ></app-user-avatar-placeholder>
         <div class="chat-info flex-grow">
-          <div class="chat-name fw-bold">
-            {{ chat?.firstName }} {{ chat?.lastName }}
+          <div class="chat-name d-flex fw-bold">
+            <div class="mr-05">{{ chat?.firstName }}</div>
+            <div>{{ chat?.lastName }}</div>
           </div>
-          <div class="chat-last-message text-gray fs-085 text-overflow-ellipsis">
-            {{ chat?.lastMessage?.text | truncateText : (40)}}
+          <div
+            class="chat-last-message text-gray fs-085 text-overflow-ellipsis"
+          >
+            {{ chat?.lastMessage?.text | truncateText : 40 }}
           </div>
         </div>
         <div class="chat-date text-gray fs-075">
@@ -78,7 +80,9 @@
 
 <ng-template #emptyData>
   <div class="empty-data d-flex justify-center">
-    {{ accessToken() ? "Chats list empty or not found" : "You are not logged in" }}
+    {{
+      accessToken() ? "Chats list empty or not found" : "You are not logged in"
+    }}
   </div>
 </ng-template>
 

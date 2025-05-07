@@ -1,0 +1,10 @@
+<button class="google-auth-button d-flex items-center " (click)="onClick()">
+    <ng-container *ngIf="!isLoggedIn; else loggedIn">
+      <img src="../../../../assets/images/google-icon-logo-svg.svg" alt="Google" class="icon" />
+      <span>Sign in with Google</span>
+    </ng-container>
+    <ng-template #loggedIn>
+      <span>Log out</span>
+    </ng-template>
+  </button>
+  

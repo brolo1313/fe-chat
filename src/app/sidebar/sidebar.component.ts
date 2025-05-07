@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, HostListener, inject, OnDestroy } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -13,10 +13,11 @@ import { IChat, IProfile } from '../chat-window/models/chat.models';
 import { ToggleAutoBotComponent } from '../shared/components/toggle-auto-bot/toggle-auto-bot.component';
 import { SocketService } from '../socket/socket.service';
 import { AutoBotStatusStoreService } from '../shared/services/auto-bot-status-store.service';
+import { GoogleLoginButtonComponent } from '../auth/components/google-login-button/google-login-button.component';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent, TruncateTextPipe, ToggleAutoBotComponent],
+  imports: [CommonModule, UserAvatarPlaceholderComponent, ReactiveFormsModule, ChatModalComponent, TruncateTextPipe, ToggleAutoBotComponent, GoogleLoginButtonComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
@@ -56,7 +57,6 @@ export class SidebarComponent implements OnDestroy {
   get showEmptyData(): boolean {
     return !this.accessToken() || !this.filteredChats$.length;
   }
-
   private chatListFetched = false;
 
   constructor() {
@@ -86,7 +86,7 @@ export class SidebarComponent implements OnDestroy {
     this.socketService.sendAutoBotStatus(botStatus);
   }
 
-  public signInWithGoogle(isAccessToken: boolean) {
+  public handleLoginAndLogout(isAccessToken: boolean) {
     isAccessToken ? this.authService.logout() : this.authService.login();
   }
 
@@ -175,6 +175,7 @@ export class SidebarComponent implements OnDestroy {
 
   public onSelectChat(chat: IChat) {
     this.localSelectedChat = chat;
+    if (chat.id === this.storeSelectedChat.selectedChat()?.id) return;
     this.storeSelectedChat.setSelectedChat(chat);
   }
 

@@ -1,6 +1,7 @@
 @use "./assets/styles/reset";
 @use "./assets/styles/helpers";
 @use "./assets/styles/variables" as *;
+@use "./assets/styles/loader";
 
 body {
   font-family: $font-base;

@@ -83,7 +83,7 @@ export class AuthGoogleService {
                     this.socketService.connect(response.accessToken);
                     this.toastService.showToaster(
                         TOAST_STATE.success,
-                        `You have successfully logged in! Hi <strong>${user.given_name}</strong>`
+                        `Hi <strong>${user.given_name}</strong> <br> You have successfully logged in! `
                     );
                 },
                 error: (error) => {

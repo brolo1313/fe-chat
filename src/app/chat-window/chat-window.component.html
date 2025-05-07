@@ -4,27 +4,28 @@
       [source]="selectedChatLocalSignal()?.imagePath ?? ''"
     ></app-user-avatar-placeholder>
 
-    @if(accessToken) {
+    @if(accessToken && selectedChatLocalSignal()) {
     <div class="chat-title">
-      {{
-        selectedChatLocalSignal() ? selectedChatLocalSignal().firstName + " " + selectedChatLocalSignal().lastName : ""
-      }}
+      <ng-container *ngTemplateOutlet="chatNameTemplate"></ng-container>
     </div>
-
     }
   </header>
 
   @if(selectedChatLocalSignal() && accessToken) {
   <div class="message-content full-height overflow-auto" #chatContainer>
     <div
-      *ngFor="let message of selectedChatLocalSignal()?.messages"
-      [ngClass]="{ 'message-row': true, own: !message?.isBot }"
+      *ngFor="
+        let message of selectedChatLocalSignal()?.messages;
+        let i = index;
+        trackBy: trackByFn
+      "
+      [ngClass]="{
+        'message-row': true,
+        own: isMessageLoading() ? i % 2 === 0 : !message.isBot
+      }"
       class="p-1"
     >
-      <div
-        class="message-wrapper d-flex flex-column"
-    
-      >
+      <div class="message-wrapper d-flex flex-column">
         <div class="message-bubble" [class.loading]="isMessageLoading()">
           <span>{{ message?.text }}</span>
         </div>
@@ -58,3 +59,10 @@
   </div>
   }
 </section>
+
+<ng-template #chatNameTemplate>
+  <div class="chat-name d-flex fw-bold">
+    <div class="mr-05">{{ selectedChatLocalSignal().firstName }}</div>
+    <div>{{ selectedChatLocalSignal().lastName }}</div>
+  </div>
+</ng-template>
