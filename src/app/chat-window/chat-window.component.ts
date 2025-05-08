@@ -107,7 +107,6 @@ export class ChatWindowComponent {
 
   public handleConfirm(data: { id: string, message: string }): void {
     this.modalVisible = false;
-    // const { firstName, lastName } = data;
 
     switch (this.modalMode) {
       case 'edit':

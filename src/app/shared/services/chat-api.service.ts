@@ -16,9 +16,9 @@ export interface IMessageDeleteResponse {
 }
 
 export interface IMessageUpdateResponse {
-    success: boolean;
+    success?: boolean;
     messageData: IMessage
-    isLast: boolean
+    isLast?: boolean
 }
 
 @Injectable({ providedIn: 'root' })

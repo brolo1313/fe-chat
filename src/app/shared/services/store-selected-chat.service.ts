@@ -95,19 +95,30 @@ export class StoreSelectedChatService {
     const { messageData, isLast } = data;
     const { id: messageId, chat: chatId } = messageData;
 
-    const chat = this._selectedChat();
-    if (!chat || chat.id !== chatId) return;
+    const selectedChat = this._selectedChat();
+    if (!selectedChat || selectedChat.id !== chatId) {
+      const chatInSidebarList = this._allChats().find(chat => chat.id === chatId);
 
-    const updatedMessages = chat.messages.map(msg =>
-      msg.id == messageId ? { ...msg, ...messageData } : msg
-    );
+      const updatedChat = {
+        ...chatInSidebarList,
+        messages: [...chatInSidebarList!.messages, messageData],
+        lastMessage: messageData,
+      };
+      this.updateChatsInListById(updatedChat as IChat);
+    } else {
+      const updatedMessages = selectedChat!.messages.map(msg =>
+        msg.id == messageId ? { ...msg, ...messageData } : msg
+      );
 
-    const lastMessage = isLast ? messageData : chat.lastMessage;
-    this.setSelectedChatMessages(updatedMessages, lastMessage);
+      const lastMessage = isLast ? messageData : selectedChat!.lastMessage;
+      this.setSelectedChatMessages(updatedMessages, lastMessage);
 
-    if (isLast) {
-      const updatedChat: IChat = { ...chat, lastMessage: messageData };
-      this.updateChatsInListById(updatedChat);
-    }
+      if (isLast) {
+        const updatedChat = { ...selectedChat, lastMessage: messageData };
+        this.updateChatsInListById(updatedChat as IChat);
+      }
+    };
+
+
   }
 }

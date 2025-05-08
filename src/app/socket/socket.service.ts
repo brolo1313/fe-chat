@@ -8,9 +8,10 @@ import { TOAST_STATE, ToastService } from '../shared/services/toast.service';
 @Injectable({ providedIn: 'root' })
 export class SocketService {
     private socket!: Socket;
-
     private storeSelectedChatService = inject(StoreSelectedChatService);
     private toastService = inject(ToastService);
+    private toast = (fullName: string) => this.toastService.showToaster(TOAST_STATE.success, `New message for <strong>${fullName}</strong>`)
+
     connect(token: string | undefined) {
         this.socket = io(environment.socketUrl, {
             auth: { token },
@@ -29,8 +30,15 @@ export class SocketService {
         });
 
         this.onMessage((data) => {
-            const { id, message } = data;
-            this.storeSelectedChatService.updateSelectedChat(message);
+            const { chatId, message, fullName } = data;
+
+            const selectedChat = this.storeSelectedChatService.selectedChat();
+            if (!selectedChat || selectedChat.id !== chatId) {
+                this.storeSelectedChatService.findChatByIdAndUpdateMessage({ messageData: message });
+                this.toast(fullName!);
+            } else {
+                this.storeSelectedChatService.updateSelectedChat(message);
+            };
         });
 
         this.onAutoBotMessage((data) => {
@@ -39,7 +47,7 @@ export class SocketService {
             if (message.chat === this.storeSelectedChatService.selectedChat()?.id) {
                 this.storeSelectedChatService.updateSelectedChat(message);
             }
-            this.toastService.showToaster(TOAST_STATE.success, `New message for <strong>${fullName}</strong>`);
+            this.toast(fullName!);
         })
     }
 
@@ -51,7 +59,7 @@ export class SocketService {
         this.socket.emit('send-message', payload);
     }
 
-    onMessage(callback: (data: { id: string; message: IMessage }) => void) {
+    onMessage(callback: (data: { chatId: string; message: IMessage, fullName?: string }) => void) {
         this.socket.on('new-message', callback);
     }
 
