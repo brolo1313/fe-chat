@@ -14,6 +14,7 @@
   @if(storeSelectedChat.selectedChat() && accessToken) {
   <div class="message-content full-height overflow-auto" #chatContainer>
     <div
+      #messageItem
       *ngFor="
         let message of storeSelectedChat.selectedChat()?.messages;
         let i = index;

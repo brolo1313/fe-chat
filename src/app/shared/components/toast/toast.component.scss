@@ -1,3 +1,4 @@
+@use "../../../../assets/styles/variables" as *;
 .toast-class {
   position: absolute;
   top: 0;
@@ -15,17 +16,18 @@
   padding: 1.5rem;
   border-radius: 4px;
   font-size: 0.9rem;
+  background-color: $bg-secondary;
 
   &.success-toast {
-    border-left: 6px solid #28a745;
+    border-left: 6px solid $bg-success;
   }
 
   &.warning-toast {
-    border-left: 6px solid #ffc107;
+    border-left: 6px solid $bg-warning;
   }
 
   &.danger-toast {
-    border-left: 6px solid #dc3545;
+    border-left: 6px solid $bg-danger;
   }
 
   .toast-message-block {

@@ -1,3 +1,5 @@
+@use "../../../../assets/styles/variables" as *;
+
 .toggle-wrapper {
   display: flex;
   align-items: center;
@@ -42,7 +44,7 @@
 }
 
 input:checked + .slider {
-  background-color: #4caf50;
+  background-color: $bg-success;
 }
 
 input:checked + .slider::before {
@@ -58,7 +60,7 @@ input:checked + .slider::before {
   height: 30px;
   cursor: help;
 
-   svg {
+  svg {
     transition: fill 0.3s ease;
 
     &.active {
@@ -70,4 +72,3 @@ input:checked + .slider::before {
     }
   }
 }
-

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, HostListener, inject, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
@@ -25,6 +25,7 @@ export class ChatWindowComponent {
   private localStorageService = inject(LocalStorageUserService);
   private socketService = inject(SocketService);
 
+  @ViewChildren('messageItem') messageItems!: QueryList<ElementRef>;
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   public accessToken: string | null | undefined = null;
@@ -78,6 +79,22 @@ export class ChatWindowComponent {
     });
   }
 
+  ngAfterViewInit() {
+    this.messageItems.changes.subscribe(() => {
+      const containerEl = this.chatContainer.nativeElement;
+      const containerHeight = containerEl.clientHeight;
+
+      const totalMessagesHeight = this.messageItems.reduce((total, item) => {
+        return total + item.nativeElement.offsetHeight;
+      }, 0);
+
+
+      if (totalMessagesHeight > containerHeight) {
+        this.scrollToBottom();
+      }
+    });
+  }
+
   sendMessage(msg: string) {
     if (msg.trim()) {
       this.socketService.sendMessage({
@@ -85,14 +102,12 @@ export class ChatWindowComponent {
         text: msg,
       });
       this.messageControl.reset();
-      this.scrollToBottom();
     }
   }
 
   onKeyDownEvent() {
     const msg = this.messageFC;
     this.sendMessage(msg!);
-    this.scrollToBottom();
   }
 
   public editChatContextMenu() {
@@ -125,14 +140,14 @@ export class ChatWindowComponent {
 
   private updateMessage(id: string | number, message: string): void {
     this.apiService.updateMessage(id, message).subscribe({
-      next: (data:IMessageUpdateResponse) => this.storeSelectedChat.findChatByIdAndUpdateMessage(data),
+      next: (data: IMessageUpdateResponse) => this.storeSelectedChat.findChatByIdAndUpdateMessage(data),
       error: (err: any) => console.error('Update failed', err)
     });
   }
 
   private deleteMessage(id: string | number): void {
     this.apiService.deleteMessage(id).subscribe({
-      next: (data:IMessageDeleteResponse) => this.storeSelectedChat.findChatByIdAndDeleteMessage(data),
+      next: (data: IMessageDeleteResponse) => this.storeSelectedChat.findChatByIdAndDeleteMessage(data),
       error: (err: any) => console.error('Delete failed', err)
     });
   }
@@ -160,8 +175,9 @@ export class ChatWindowComponent {
   }
   private scrollToBottom(): void {
     const container = this.chatContainer?.nativeElement;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-    }
+    container.scrollTo({
+      top: container.scrollHeight + 20,
+      behavior: 'auto'
+    });
   }
 }
