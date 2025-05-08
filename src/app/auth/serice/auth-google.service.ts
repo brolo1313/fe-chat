@@ -37,7 +37,7 @@ export class AuthGoogleService {
             issuer: 'https://accounts.google.com',
             strictDiscoveryDocumentValidation: false,
             clientId: environment.googleClientId,
-            redirectUri: window.location.origin,
+            redirectUri: environment.webUri,
             scope: 'openid profile email',
         };
 
