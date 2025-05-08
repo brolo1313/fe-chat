@@ -1,7 +1,6 @@
 @use "../../assets/styles/variables" as *;
 
 .sidebar {
-  width: 500px;
   height: 100vh;
   background-color: $white;
   border-right: 1px solid #ddd;
@@ -44,7 +43,6 @@ hr {
 
 .new-chat-wrapper {
   margin: 10 1px;
-
   .new-chat-button {
     border-radius: $border-radius;
     background-color: $primary;
@@ -78,4 +76,16 @@ hr {
 
 .chat-item:hover {
   background-color: $light;
+}
+
+.chat-date {
+  min-width: 70px;
+}
+
+.chat-last-message {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
 }

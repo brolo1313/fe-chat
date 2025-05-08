@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, HostListener, inject, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, HostListener, inject, OnDestroy, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StoreSelectedChatService } from '../shared/services/store-selected-chat.service';
@@ -9,6 +9,7 @@ import { SocketService } from '../socket/socket.service';
 import { IChat, IMessage } from './models/chat.models';
 import { ContextMenuComponent } from '../shared/components/context-menu/context-menu.component';
 import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chat-window',
@@ -19,7 +20,7 @@ import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.c
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.scss'
 })
-export class ChatWindowComponent {
+export class ChatWindowComponent implements OnDestroy, AfterViewInit {
   public storeSelectedChat = inject(StoreSelectedChatService);
   private apiService = inject(ChatApiService);
   private localStorageService = inject(LocalStorageUserService);
@@ -43,6 +44,8 @@ export class ChatWindowComponent {
 
   public localSelectedChatMessage!: IMessage;
   public chat = this.storeSelectedChat.selectedChat()
+
+  public unsubscribeAll$ = new Subject()
 
   @HostListener('document:click')
   hideContextMenu() {
@@ -80,19 +83,22 @@ export class ChatWindowComponent {
   }
 
   ngAfterViewInit() {
-    this.messageItems.changes.subscribe(() => {
-      const containerEl = this.chatContainer.nativeElement;
-      const containerHeight = containerEl.clientHeight;
+    this.messageItems.changes.pipe(
+      takeUntil(this.unsubscribeAll$)
+    )
+      .subscribe(() => {
+        const containerEl = this.chatContainer.nativeElement;
+        const containerHeight = containerEl.clientHeight;
 
-      const totalMessagesHeight = this.messageItems.reduce((total, item) => {
-        return total + item.nativeElement.offsetHeight;
-      }, 0);
+        const totalMessagesHeight = this.messageItems.reduce((total, item) => {
+          return total + item.nativeElement.offsetHeight;
+        }, 0);
 
 
-      if (totalMessagesHeight > containerHeight) {
-        this.scrollToBottom();
-      }
-    });
+        if (totalMessagesHeight > containerHeight) {
+          this.scrollToBottom();
+        }
+      });
   }
 
   sendMessage(msg: string) {
@@ -179,5 +185,10 @@ export class ChatWindowComponent {
       top: container.scrollHeight + 20,
       behavior: 'auto'
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll$.next(true);
+    this.unsubscribeAll$.complete();
   }
 }

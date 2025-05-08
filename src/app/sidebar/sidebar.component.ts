@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, Input, OnDestroy, signal } from '@angular/core';
 import { UserAvatarPlaceholderComponent } from '../shared/components/user-avatar-placeholder/user-avatar-placeholder.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -8,7 +8,6 @@ import { ChatModalComponent } from '../shared/components/chat-modal/chat-modal.c
 import { AuthGoogleService } from '../auth/serice/auth-google.service';
 import { LocalStorageUserService } from '../shared/services/local-storage-user.service';
 import { ChatApiService } from '../shared/services/chat-api.service';
-import { TruncateTextPipe } from '../shared/pipes/trucate-text.pipe';
 import { IChat, IProfile } from '../chat-window/models/chat.models';
 import { ToggleAutoBotComponent } from '../shared/components/toggle-auto-bot/toggle-auto-bot.component';
 import { SocketService } from '../socket/socket.service';
@@ -21,7 +20,7 @@ import { ContextMenuComponent } from '../shared/components/context-menu/context-
   imports: [
     CommonModule, UserAvatarPlaceholderComponent,
     ReactiveFormsModule, ChatModalComponent,
-    TruncateTextPipe, ToggleAutoBotComponent,
+    ToggleAutoBotComponent,
     GoogleLoginButtonComponent,
     ContextMenuComponent],
   templateUrl: './sidebar.component.html',
@@ -38,6 +37,8 @@ export class SidebarComponent implements OnDestroy {
   readonly accessToken = computed(() => this.localStorageService.userSettings()?.accessToken);
   readonly photoUrl = computed(() => this.localStorageService.userSettings()?.picture);
   readonly userName = computed(() => this.localStorageService.userSettings()?.firstName);
+
+  @Input() dynamicWidth = 500; // default width
 
   public modalVisible = false;
   public modalMode: 'create' | 'delete' | 'edit' = 'create';

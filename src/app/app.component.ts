@@ -1,21 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { LocalStorageUserService } from './shared/services/local-storage-user.service';
 import { SocketService } from './socket/socket.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { ResizerScreenComponent } from './shared/components/resizer-screen/resizer-screen.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [SidebarComponent, ChatWindowComponent, ToastComponent],
+  imports: [SidebarComponent, ChatWindowComponent, ToastComponent, ResizerScreenComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private localStorageUserService = inject(LocalStorageUserService);
+  private socketService = inject(SocketService);
   title = 'fe-chat';
-
-  constructor(private localStorageUserService: LocalStorageUserService, private socketService: SocketService) {
-  }
+  leftSideBarWidth: number = 500;
 
   ngOnInit() {
     const userSettings = this.localStorageUserService.userSettings();
@@ -24,4 +26,9 @@ export class AppComponent {
       this.socketService.connect(userSettings.accessToken);
     }
   }
+
+  onResize(event: any) {
+    this.leftSideBarWidth = event;
+  }
+
 }

@@ -1,5 +1,8 @@
 <div class="d-flex">
-  <app-sidebar></app-sidebar>
+  <app-sidebar [dynamicWidth]="leftSideBarWidth"></app-sidebar>
+  <app-resizer-screen
+    (onResize)="onResize($event)"
+  ></app-resizer-screen>
   <app-chat-window class="full-width"></app-chat-window>
 </div>
 

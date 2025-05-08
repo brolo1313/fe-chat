@@ -1,0 +1,7 @@
+@use "../../../../assets/styles/variables" as *;
+.resizer-screen {
+  width: 5px;
+  height: 100%;
+  background-color: $header-color;
+  cursor: ew-resize;
+}

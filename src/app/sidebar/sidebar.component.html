@@ -1,21 +1,26 @@
-<aside class="sidebar d-flex flex-column">
+<aside
+  class="sidebar d-flex flex-column"
+  [ngStyle]="{ width: dynamicWidth + 'px' }"
+>
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
-      <div class="d-flex flex-column items-center justify-center">
-        <app-user-avatar-placeholder
-          [source]="photoUrl()"
-        ></app-user-avatar-placeholder>
+      <div class="chank-header d-flex items-center">
+        <div class="d-flex flex-column items-center justify-center mr-2">
+          <app-user-avatar-placeholder
+            [source]="photoUrl()"
+          ></app-user-avatar-placeholder>
 
-        <div class="user-name">
-          <span>{{ userName() }}</span>
+          <div class="user-name">
+            <span>{{ userName() }}</span>
+          </div>
         </div>
-      </div>
 
-      <app-toggle-auto-bot
-        *ngIf="accessToken()"
-        (onToggleAutoBot)="toggleAutoBot($event)"
-        [autoBotStatus]="autoBotStatusStoreService.statusAutoBotValue"
-      ></app-toggle-auto-bot>
+        <app-toggle-auto-bot
+          *ngIf="accessToken()"
+          (onToggleAutoBot)="toggleAutoBot($event)"
+          [autoBotStatus]="autoBotStatusStoreService.statusAutoBotValue"
+        ></app-toggle-auto-bot>
+      </div>
 
       <app-google-login-button
         [isLoggedIn]="!!accessToken()"
@@ -64,15 +69,15 @@
         <app-user-avatar-placeholder
           [source]="chat.imagePath"
         ></app-user-avatar-placeholder>
-        <div class="chat-info flex-grow">
+        <div class="chat-info flex-grow text-overflow-ellipsis">
           <div class="chat-name d-flex fw-bold">
             <div class="mr-05">{{ chat?.firstName }}</div>
             <div>{{ chat?.lastName }}</div>
           </div>
           <div
-            class="chat-last-message text-gray fs-085 text-overflow-ellipsis"
+            class="chat-last-message text-gray fs-085"
           >
-            {{ chat?.lastMessage?.text | truncateText : 40 }}
+            {{ chat?.lastMessage?.text }}
           </div>
         </div>
         <div class="chat-date text-gray fs-075">
