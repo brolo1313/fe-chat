@@ -67,7 +67,7 @@ export const httpErrorsInterceptor: HttpInterceptorFn = (req, next) => {
         default:
           toastService.showToaster(
             TOAST_STATE.danger,
-            `${dataError.statusText}please login again. ${dataError.status}`
+            `${dataError.statusText} please login again. ${dataError.status}`
           );
           authService.logout();
           break;

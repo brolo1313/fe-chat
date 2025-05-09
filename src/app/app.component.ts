@@ -6,6 +6,7 @@ import { SocketService } from './socket/socket.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { ResizerScreenComponent } from './shared/components/resizer-screen/resizer-screen.component';
 import { CommonModule } from '@angular/common';
+import { AuthGoogleService } from './auth/serice/auth-google.service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,13 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements OnInit {
   private localStorageUserService = inject(LocalStorageUserService);
   private socketService = inject(SocketService);
+  private auth = inject(AuthGoogleService);
+
   title = 'fe-chat';
   leftSideBarWidth: number = 500;
 
   ngOnInit() {
+    this.auth.pingServer();
     const userSettings = this.localStorageUserService.userSettings();
 
     if (userSettings?.accessToken) {

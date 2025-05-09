@@ -66,6 +66,9 @@ export class AuthGoogleService {
         return this.oAuthService.getAccessToken();
     }
 
+    pingServer() {
+        this.http.get(`${environment.socketUrl}`).subscribe();
+    }
 
     private sendProfileToBackend(user: any) {
         const payload = {
