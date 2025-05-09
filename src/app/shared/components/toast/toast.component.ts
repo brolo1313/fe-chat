@@ -10,14 +10,12 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './toast.component.scss',
   animations: [
     trigger('toastTrigger', [
+      state('open', style({ transform: 'translateY(0%)', opacity: 1 })),
       state('close', style({ transform: 'translateY(-250%)', opacity: 0 })),
       transition('void => open', [
         style({ transform: 'translateY(-250%)', opacity: 0 }),
         animate('300ms ease-in-out')
       ]),
-      transition('open => void', [
-        animate('300ms ease-in-out', style({ transform: 'translateY(-250%)', opacity: 0 }))
-      ])
     ])
   ]
 })
