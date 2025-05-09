@@ -4,7 +4,6 @@
 @use "./assets/styles/loader";
 @use "./assets/styles/tooltip";
 
-
 body {
   font-family: $font-base;
 }
@@ -17,7 +16,26 @@ app-toast,
   z-index: 2;
 }
 
-
 .empty-data {
   font-size: 20px;
+}
+
+body.spinner::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-image: url("/assets/images/spinner.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60px 60px;
 }

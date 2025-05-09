@@ -79,6 +79,8 @@ export class AuthGoogleService {
             googleId: user.sub,
         };
 
+        document.body.classList.add('spinner');
+
         this.http.post<AuthDataGoogle>(`${environment.apiUrl}/auth/google/callback`, payload)
             .subscribe({
                 next: (response: AuthDataGoogle) => {
@@ -95,6 +97,9 @@ export class AuthGoogleService {
                         'Something went wrong, please try again'
                     );
                     console.log('sendProfileToBackend error', error);
+                },
+                complete: () => {
+                    document.body.classList.remove('spinner');
                 }
             });
     }
