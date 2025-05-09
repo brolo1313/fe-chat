@@ -1,5 +1,9 @@
 # FeChat - Real-time Chat Application
 
+⚠️ Notice: Free Hosting Delay
+This app is hosted on a free service, which may go to sleep after periods of inactivity.
+As a result, the first request after a while can take up to 50 seconds to respond while the server spins back up.
+
 **SCREENSHOTS**
 
 <img src="https://github.com/user-attachments/assets/c1a364a0-6d30-47b9-bf0e-8171f0a7c1d0" width="150"/>
