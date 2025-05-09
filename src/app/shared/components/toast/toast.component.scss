@@ -17,7 +17,12 @@
   border-radius: 4px;
   font-size: 0.9rem;
   background-color: $bg-secondary;
+  transform: translateY(90%);
 
+  .close-btn {
+    cursor: pointer;
+    font-size: 18px;
+  }
   &.success-toast {
     border-left: 6px solid $bg-success;
   }
@@ -31,10 +36,19 @@
   }
 
   .toast-message-block {
-    max-width: 300px;
+    // max-width: 300px;
     font-size: 16px;
     overflow-wrap: break-word;
     word-break: break-word;
     white-space: normal;
   }
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+  left: 0;
+  right: 0;
+  max-width: 500px;
 }

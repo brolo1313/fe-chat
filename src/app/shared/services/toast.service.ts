@@ -1,6 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { BehaviorSubject } from 'rxjs';
 
 export const TOAST_STATE = {
   success: 'success-toast',
@@ -17,15 +16,17 @@ export class ToastService {
   public toastMessage = signal<SafeHtml>('Default Toast Message');
   public toastState = signal(TOAST_STATE.success);
 
-  private readonly duration = 3000;
+  public className = signal('');
 
-  showToaster(toastState: string, toastMessage: string): void {
-    console.log('showtoaster apear');
+  private readonly duration = 4000;
+
+  showToaster(toastState: string, toastMessage: string , delay: number = this.duration, className: string = ''): void {
     const sanitized = this.domSanitizer.bypassSecurityTrustHtml(toastMessage);
+    this.className.set(className);
     this.showToast.set(true);
     this.toastState.set(toastState);
     this.toastMessage.set(sanitized);
-    setTimeout(() => this.showToast.set(false), this.duration);
+    setTimeout(() => this.showToast.set(false), delay);
   }
 
   dismissToast(): void {
