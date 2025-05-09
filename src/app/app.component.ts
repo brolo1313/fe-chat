@@ -21,16 +21,18 @@ export class AppComponent implements OnInit {
   private auth = inject(AuthGoogleService);
   private toastService = inject(ToastService);
 
+  private toastKey = 'shownFreeHostToast';
 
   title = 'fe-chat';
   leftSideBarWidth: number = 500;
 
   ngOnInit() {
     this.auth.pingServer();
-    console.log('AppComponent ngOnInit');
-    this.toastService.showToaster(TOAST_STATE.warning,
-      `<strong>Free Hosting Delay</strong> This app is hosted on a free service, which may go to sleep after periods of inactivity. <br> 
-      As a result, the first request after a while can take up to 50 seconds to respond while the server spins back up.`, 10000, 'center');
+    if (!sessionStorage.getItem(this.toastKey)) {
+      this.onInitFreeHostToast();
+
+      sessionStorage.setItem(this.toastKey, 'true');
+    }
     const userSettings = this.localStorageUserService.userSettings();
 
     if (userSettings?.accessToken) {
@@ -40,6 +42,16 @@ export class AppComponent implements OnInit {
 
   onResize(event: any) {
     this.leftSideBarWidth = event;
+  }
+
+  onInitFreeHostToast() {
+    this.toastService.showToaster(
+      TOAST_STATE.warning,
+      `<strong>Free Hosting Delay</strong> This app is hosted on a free service, which may go to sleep after periods of inactivity. <br> 
+      As a result, the first request after a while can take up to 50 seconds to respond while the server spins back up.`,
+      10000,
+      'center'
+    );
   }
 
 }
