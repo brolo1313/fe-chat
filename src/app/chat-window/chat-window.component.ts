@@ -29,12 +29,11 @@ export class ChatWindowComponent implements OnDestroy, AfterViewInit {
   @ViewChildren('messageItem') messageItems!: QueryList<ElementRef>;
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
+  private lastLoadedChatId: number | string | null = null;
+
   public accessToken: string | null | undefined = null;
   public messageControl = new FormControl('', [Validators.required])
-
   public isMessageLoading = signal(true);
-
-  private lastLoadedChatId: number | string | null = null;
 
   public contextMenuVisible = false;
   public contextMenuPosition = { x: 0, y: 0 };
@@ -95,10 +94,11 @@ export class ChatWindowComponent implements OnDestroy, AfterViewInit {
         }, 0);
 
 
-        if (totalMessagesHeight > containerHeight) {
+        if (totalMessagesHeight > containerHeight && this.modalMode !== 'delete') {
           this.scrollToBottom();
         }
       });
+
   }
 
   sendMessage(msg: string) {
@@ -108,6 +108,7 @@ export class ChatWindowComponent implements OnDestroy, AfterViewInit {
         text: msg,
       });
       this.messageControl.reset();
+      this.modalMode = 'create';
     }
   }
 
@@ -142,18 +143,23 @@ export class ChatWindowComponent implements OnDestroy, AfterViewInit {
         }
         break;
     }
+
   }
 
   private updateMessage(id: string | number, message: string): void {
     this.apiService.updateMessage(id, message).subscribe({
-      next: (data: IMessageUpdateResponse) => this.storeSelectedChat.findChatByIdAndUpdateMessage(data),
+      next: (data: IMessageUpdateResponse) => {
+        this.storeSelectedChat.findChatByIdAndUpdateMessage(data);
+      },
       error: (err: any) => console.error('Update failed', err)
     });
   }
 
   private deleteMessage(id: string | number): void {
     this.apiService.deleteMessage(id).subscribe({
-      next: (data: IMessageDeleteResponse) => this.storeSelectedChat.findChatByIdAndDeleteMessage(data),
+      next: (data: IMessageDeleteResponse) => {
+        this.storeSelectedChat.findChatByIdAndDeleteMessage(data);
+      },
       error: (err: any) => console.error('Delete failed', err)
     });
   }
