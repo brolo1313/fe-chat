@@ -1,5 +1,16 @@
 # FeChat - Real-time Chat Application
 
+**SCREENSHOTS**
+
+<img src="https://github.com/user-attachments/assets/c1a364a0-6d30-47b9-bf0e-8171f0a7c1d0" width="150"/>
+<img src="https://github.com/user-attachments/assets/16caec08-a962-46bf-b16d-6671280ab61b" width="250"/>
+<img src="https://github.com/user-attachments/assets/6255cf27-7fe3-491e-8d33-00454766b546" width="250"/>
+<img src="https://github.com/user-attachments/assets/a765b5e0-3028-485e-8d44-81c668c56573" width="250"/>
+<img src="https://github.com/user-attachments/assets/f02932e7-bbd6-485e-9093-fccb10f0e261" width="250"/>
+<img src="https://github.com/user-attachments/assets/40c9bf9f-2f40-4b43-9a0d-3baa3357d245" width="250" height="70"/>
+<img src="https://github.com/user-attachments/assets/29d75d7f-88c4-41ab-b416-1fa6eeee7d3d" width="250"/>
+
+
 FeChat is a modern, real-time chat application built with Angular that provides a seamless communication experience for users. The application features real-time messaging capabilities using WebSocket technology and a clean, intuitive user interface.
 1 on 1 chat system with auto-response messages from the server(qoutable API). AutoBot status activity indicator wich responses random quatble message to the random chat .
 App have 3 predefined chats.
