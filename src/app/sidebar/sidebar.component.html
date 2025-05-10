@@ -4,7 +4,7 @@
 >
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
-      <div class="chank-header d-flex items-center">
+      <div [ngClass]="{ 'ml-2': localStorageService.isMobile() }" class="chank-header d-flex items-center">
         <div class="d-flex flex-column items-center justify-center mr-2">
           <app-user-avatar-placeholder
             [source]="photoUrl()"

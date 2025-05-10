@@ -1,9 +1,15 @@
 <div class="d-flex">
-  <app-sidebar [dynamicWidth]="leftSideBarWidth"></app-sidebar>
-  <app-resizer-screen
-    (onResize)="onResize($event)"
-  ></app-resizer-screen>
+  <app-sidebar
+    [dynamicWidth]="leftSideBarWidth"
+    class="sidebar"
+    [class.open]="showSidebar"
+  ></app-sidebar>
+
+  <app-resizer-screen (onResize)="onResize($event)"></app-resizer-screen>
+
   <app-chat-window class="full-width"></app-chat-window>
 </div>
+
+<button *ngIf="isMobile" class="toggle-btn" (click)="toggleSidebar()">☰</button>
 
 <app-toast></app-toast>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { LocalStorageUserService } from './shared/services/local-storage-user.service';
@@ -16,7 +16,7 @@ import { TOAST_STATE, ToastService } from './shared/services/toast.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  private localStorageUserService = inject(LocalStorageUserService);
+  public localStorageUserService = inject(LocalStorageUserService);
   private socketService = inject(SocketService);
   private auth = inject(AuthGoogleService);
   private toastService = inject(ToastService);
@@ -26,7 +26,20 @@ export class AppComponent implements OnInit {
   title = 'fe-chat';
   leftSideBarWidth: number = 500;
 
+  isMobile = false;
+  showSidebar = false;
+
+  constructor() {
+    effect(() => {
+      this.isMobile = this.localStorageUserService.isMobile()
+      if (!this.isMobile) {
+        this.showSidebar = true;
+      }
+    })
+  }
+
   ngOnInit() {
+    this.checkScreen();
     this.auth.pingServer();
     if (!sessionStorage.getItem(this.toastKey)) {
       this.onInitFreeHostToast();
@@ -38,6 +51,17 @@ export class AppComponent implements OnInit {
     if (userSettings?.accessToken) {
       this.socketService.connect(userSettings.accessToken);
     }
+  }
+
+  checkScreen() {
+    this.localStorageUserService.setIsMobile(window.innerWidth <= 768);
+    if (!this.localStorageUserService.isMobile()) {
+      this.showSidebar = true;
+    }
+  }
+
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
   }
 
   onResize(event: any) {

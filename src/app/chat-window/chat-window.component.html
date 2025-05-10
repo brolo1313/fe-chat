@@ -1,6 +1,7 @@
 <section class="chat-window d-flex flex-column">
   <header class="chat-header d-flex just items-center">
     <app-user-avatar-placeholder
+      [ngClass]="{ 'ml-2': localStorageService.isMobile() }"
       [source]="storeSelectedChat.selectedChat()?.imagePath ?? ''"
     ></app-user-avatar-placeholder>
 

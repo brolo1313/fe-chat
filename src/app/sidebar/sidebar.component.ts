@@ -80,6 +80,10 @@ export class SidebarComponent implements OnDestroy {
       this.filteredChats$ = this.storeSelectedChat.filteredChats();
       this.allChats$ = this.storeSelectedChat.allChats();
     })
+
+    effect(() => {
+      
+    })
     this.setupSearchControl();
   }
 

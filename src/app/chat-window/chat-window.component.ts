@@ -23,7 +23,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ChatWindowComponent implements OnDestroy, AfterViewInit {
   public storeSelectedChat = inject(StoreSelectedChatService);
   private apiService = inject(ChatApiService);
-  private localStorageService = inject(LocalStorageUserService);
+  public localStorageService = inject(LocalStorageUserService);
   private socketService = inject(SocketService);
 
   @ViewChildren('messageItem') messageItems!: QueryList<ElementRef>;
