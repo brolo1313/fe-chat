@@ -5,12 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration stage",
     "test": "ng test",
-    "dev": "ng serve --configuration=development",
+    "stage": "ng serve --configuration=stage",
     "prod": "ng serve --configuration=production",
     "build:prod": "ng build --configuration=production",
-    "build:dev": "ng build --configuration=development"
+    "build:stage": "ng build --configuration=stage"
   },
   "private": true,
   "dependencies": {

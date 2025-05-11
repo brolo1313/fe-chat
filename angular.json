@@ -43,11 +43,11 @@
               ],
               "outputHashing": "all"
             },
-            "development": {
+            "stage": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
+                  "with": "src/environments/environment.stage.ts"
                 }
               ],
               "optimization": true,
@@ -70,12 +70,12 @@
               "port": 4201,
               "buildTarget": "fe-chat:build:production"
             },
-            "development": {
+            "stage": {
               "port": 4202,
-              "buildTarget": "fe-chat:build:development"
+              "buildTarget": "fe-chat:build:stage"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "stage"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
