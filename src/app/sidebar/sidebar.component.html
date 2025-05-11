@@ -1,10 +1,17 @@
 <aside
   class="sidebar d-flex flex-column"
-  [ngStyle]="{ width: dynamicWidth + 'px' }"
+  [ngStyle]="
+    localStorageService.isMobile()
+      ? { width: '350' + 'px' }
+      : { width: dynamicWidth + 'px' }
+  "
 >
   <div class="header-wrapper d-flex flex-column">
     <div class="sidebar-header d-flex justify-between items-center mb-1">
-      <div class="chank-header d-flex items-center">
+      <div
+        [ngClass]="{ 'ml-2': localStorageService.isMobile() }"
+        class="chank-header d-flex items-center"
+      >
         <div class="d-flex flex-column items-center justify-center mr-2">
           <app-user-avatar-placeholder
             [source]="photoUrl()"
@@ -74,9 +81,7 @@
             <div class="mr-05">{{ chat?.firstName }}</div>
             <div>{{ chat?.lastName }}</div>
           </div>
-          <div
-            class="chat-last-message text-gray fs-085"
-          >
+          <div class="chat-last-message text-gray fs-085">
             {{ chat?.lastMessage?.text }}
           </div>
         </div>

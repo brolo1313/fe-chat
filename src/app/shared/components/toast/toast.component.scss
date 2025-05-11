@@ -17,6 +17,7 @@
   border-radius: 4px;
   font-size: 0.9rem;
   background-color: $bg-secondary;
+  z-index: 9999;
 
   .close-btn {
     cursor: pointer;

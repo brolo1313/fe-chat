@@ -1,6 +1,7 @@
 <section class="chat-window d-flex flex-column">
   <header class="chat-header d-flex just items-center">
     <app-user-avatar-placeholder
+      [ngClass]="{ 'ml-2': localStorageService.isMobile() }"
       [source]="storeSelectedChat.selectedChat()?.imagePath ?? ''"
     ></app-user-avatar-placeholder>
 
@@ -45,7 +46,6 @@
     </div>
   </div>
 
-  @if(storeSelectedChat.selectedChat()){
   <footer class="message-input-wrapper d-flex p-1 mt-auto">
     <input
       [formControl]="messageControl"
@@ -62,8 +62,11 @@
       <span>&#10148;</span>
     </button>
   </footer>
-  } } @else {
-  <div class="empty-data d-flex justify-center items-center">
+  } @else {
+  <div
+    class="empty-data d-flex justify-center items-center"
+    [ngStyle]="{ height: '100lvh' }"
+  >
     {{ accessToken ? "Select a chat" : "Login to start chatting" }}
   </div>
   }
