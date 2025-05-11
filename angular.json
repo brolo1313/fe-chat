@@ -43,6 +43,11 @@
               ],
               "outputHashing": "all"
             },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
             "stage": {
               "fileReplacements": [
                 {
@@ -71,8 +76,12 @@
               "buildTarget": "fe-chat:build:production"
             },
             "stage": {
-              "port": 4202,
+              "port": 4203,
               "buildTarget": "fe-chat:build:stage"
+            },
+            "development": {
+              "port": 4202,
+              "buildTarget": "fe-chat:build:development"
             }
           },
           "defaultConfiguration": "stage"
