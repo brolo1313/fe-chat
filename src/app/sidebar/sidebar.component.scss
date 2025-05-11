@@ -3,6 +3,7 @@
 .sidebar {
   background-color: $white;
   border-right: 1px solid #ddd;
+  height: 100%;
 }
 
 .header-wrapper {
@@ -59,11 +60,12 @@ hr {
 
 .chat-list {
   scrollbar-width: thin;
+  max-height: calc(100% - 350px);
+  padding-bottom: 20px;
 }
 
 .chat-list-title {
   color: $primary;
-  margin-bottom: 2rem;
 
   padding-left: 1rem;
   padding-top: 1rem;
