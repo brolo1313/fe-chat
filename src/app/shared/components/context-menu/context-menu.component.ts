@@ -35,12 +35,17 @@ export class ContextMenuComponent {
 
   preventBlockMoveOutViewPort() {
     const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
     let x = this.contextMenuPosition.x;
     let y = this.contextMenuPosition.y;
 
     if (x + this.menuWidth + this.padding > screenWidth) {
       x = screenWidth - this.menuWidth - this.padding;
+    }
+
+    if(y + this.menuWidth + this.padding > screenHeight) {
+      y = screenHeight - this.menuWidth;
     }
 
     this.contextMenuPosition = { x, y };

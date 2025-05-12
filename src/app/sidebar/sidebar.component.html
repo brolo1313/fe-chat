@@ -1,5 +1,5 @@
 <aside
-  class="sidebar d-flex flex-column"
+  class="sidebar d-flex flex-column justify-between"
   [ngStyle]="
     localStorageService.isMobile()
       ? { width: '350' + 'px' }
@@ -7,7 +7,9 @@
   "
 >
   <div class="header-wrapper d-flex flex-column">
-    <div class="sidebar-header d-flex justify-between items-center mb-1">
+    <div
+      class="sidebar-header d-flex justify-between items-center mb-1 pl-1 pr-1"
+    >
       <div
         [ngClass]="{ 'ml-2': localStorageService.isMobile() }"
         class="chank-header d-flex items-center"
@@ -36,19 +38,20 @@
     </div>
 
     @if (accessToken()) {
-    <input
-      type="text"
-      class="search-input mb-1"
-      [formControl]="searchControl"
-      placeholder="Search or start new chat"
-    />
+    <div class="pl-1 pr-1">
+      <input
+        type="text"
+        class="search-input mb-1 full-width"
+        [formControl]="searchControl"
+        placeholder="Search or start new chat"
+      />
+    </div>
+
     }
   </div>
 
-  <hr class="full-width" />
-
   @if (accessToken()) {
-  <div class="new-chat-wrapper p-1">
+  <div class="new-chat-wrapper pl-1 pr-1">
     <button
       (click)="showCreateModal()"
       class="new-chat-button d-flex justify-center items-center"
@@ -56,13 +59,13 @@
       <span>+</span>
     </button>
   </div>
+  } @if(!showEmptyData) {
+  <div class="chat-list-title pl-1">
+    <h3>Chats</h3>
+  </div>
+
   }
-
-  <div class="chat-list flex-grow overflow-auto">
-    <div class="chat-list-title">
-      <h3>Chats</h3>
-    </div>
-
+  <div class="chat-list overflow-auto">
     @if (showEmptyData) {
     <ng-container *ngTemplateOutlet="emptyData"></ng-container>
     } @else {
@@ -70,7 +73,10 @@
       <div
         class="chat-item d-flex items-center gap-05 border-bottom p-1 cursor-pointer"
         (click)="onSelectChat(chat)"
-        [ngClass]="{ 'active-chat': localSelectedChat?.id === chat?.id }"
+        [ngClass]="{
+          'active-chat': localSelectedChat?.id === chat?.id,
+          'pb-2': !showEmptyData
+        }"
         (contextmenu)="onRightClick($event, chat)"
       >
         <app-user-avatar-placeholder
@@ -95,7 +101,10 @@
 </aside>
 
 <ng-template #emptyData>
-  <div class="empty-data d-flex justify-center">
+  <div
+    class="empty-data d-flex justify-center items-center"
+    [ngStyle]="{ height: '100%' }"
+  >
     {{
       accessToken() ? "Chats list empty or not found" : "You are not logged in"
     }}
