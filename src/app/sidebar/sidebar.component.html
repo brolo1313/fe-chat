@@ -65,7 +65,12 @@
   </div>
 
   }
-  <div class="chat-list overflow-auto">
+  <div
+    class="chat-list overflow-auto"
+    [ngStyle]="
+      !accessToken() ? { height: '100%' } : { height: 'calc(100svh - 300px)' }
+    "
+  >
     @if (showEmptyData) {
     <ng-container *ngTemplateOutlet="emptyData"></ng-container>
     } @else {
