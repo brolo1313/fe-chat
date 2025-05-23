@@ -96,7 +96,7 @@ export class AuthGoogleService {
                         TOAST_STATE.danger,
                         'Something went wrong, please try again'
                     );
-                    console.log('sendProfileToBackend error', error);
+                    document.body.classList.remove('spinner');
                 },
                 complete: () => {
                     document.body.classList.remove('spinner');
