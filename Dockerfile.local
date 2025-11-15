@@ -1,5 +1,5 @@
 # Dockerfile for local testing production build
-# Production build з nginx, but з localhost URLs для OAuth
+# Production build with nginx, but for localhost URLs for OAuth
 
 # ====== STAGE 1 — Build Angular ======
 FROM node:20-alpine AS builder
