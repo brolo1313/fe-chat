@@ -1,3 +1,8 @@
+# Development environment configuration (default)
+# Use local MongoDB container
+# Launch: docker-compose up
+# For production: docker-compose -f docker-compose.prod.yml up
+
 services:
   # MongoDB Database
   mongodb:
@@ -22,9 +27,9 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file:
+      - ../be-chat/.env.dev
     environment:
-      - NODE_ENV=development
-      - MONGODB_URI=mongodb://mongodb:27017/chat
       - PORT=3000
     volumes:
       - ../be-chat:/app

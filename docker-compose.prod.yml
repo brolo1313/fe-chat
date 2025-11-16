@@ -1,0 +1,36 @@
+services:
+  # Backend API (use MongoDB Atlas)
+  backend:
+    build:
+      context: ../be-chat
+      dockerfile: Dockerfile
+    container_name: chat-backend-prod
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../be-chat/.env.prod
+    environment:
+      - PORT=3000
+    networks:
+      - chat-network
+
+  # Frontend Angular App
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-frontend-prod
+    restart: unless-stopped
+    ports:
+      - "4202:4202"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    networks:
+      - chat-network
+
+networks:
+  chat-network:
+    driver: bridge
